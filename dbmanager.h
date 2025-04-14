@@ -36,7 +36,7 @@ public:
     int insertSchedule(const Schedule& s);
     bool deleteSchedule(const Schedule& s);
     bool modifySchedule(const Schedule& s);
-    bool searchSchedule(const QDateTime &start, const QDateTime &end);
+    QList<Schedule> searchSchedule(const QDateTime &start, const QDateTime &end);
 };
 
 #endif // DBMANAGER_H

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "calenderwidget.h"
 #include "showScheduleDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -7,8 +8,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    showScheduleDialog* a = new showScheduleDialog(QDate::currentDate(),this);
-    a->show();
+    //showScheduleDialog* a = new showScheduleDialog(QDate::currentDate(),this);
+    calenderWidget* calWidget = new calenderWidget(this);
+    setCentralWidget(calWidget);
+
+    //a->show();
+    calWidget->show();
 }
 
 MainWindow::~MainWindow()

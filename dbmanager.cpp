@@ -143,11 +143,33 @@ bool dbManager::deleteSchedule(const Schedule& s)
     return true;
 }
 
-bool dbManager::searchSchedule(const QDateTime &start, const QDateTime &end)
+QList<Schedule> dbManager::searchSchedule(const QDateTime &start, const QDateTime &end)
 {
+    QList<Schedule> scheduleList;
+
     QSqlQuery query(db);
-    query.prepare("SELECT * FROM scheduleTbl WHERE start <= :start AND <= :end");
+    query.prepare("SELECT * FROM scheduleTbl WHERE start >= :start AND end <= :end");
     query.bindValue(":start", start);
     query.bindValue(":end", end);
-    return false;
+
+    if (!query.exec())
+    {
+        qDebug() << "[ERROR] failed to search schedule";
+        return scheduleList;
+    }
+
+    while (query.next())
+    {
+        Schedule s;
+        s.setScheduleId(query.value("id").toInt());
+        s.setScheduleName(query.value("name").toString());
+        s.setStartTime(query.value("start").toDateTime());
+        s.setEndTime(query.value("end").toDateTime());
+        s.setLocation(query.value("location").toString());
+        s.setMemo(query.value("memo").toString());
+
+        scheduleList.append(s);
+    }
+
+    return scheduleList;
 }
