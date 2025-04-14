@@ -23,6 +23,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(scheduler
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        showscheduledialog.h showscheduledialog.cpp showscheduledialog.ui
+        editscheduledialog.h editscheduledialog.cpp editscheduledialog.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET scheduler APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
