@@ -2,6 +2,9 @@
 #define EDITSCHEDULEDIALOG_H
 
 #include <QDialog>
+#include <QDebug>
+#include "Schedule.h"
+#include "dbmanager.h"
 
 namespace Ui {
 class editScheduleDialog;
@@ -17,6 +20,9 @@ public:
 
 private:
     Ui::editScheduleDialog *ui;
+
+private slots:
+    void onAccepted();
 };
 
 #endif // EDITSCHEDULEDIALOG_H
