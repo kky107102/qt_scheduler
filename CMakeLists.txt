@@ -27,6 +27,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         showscheduledialog.h showscheduledialog.cpp showscheduledialog.ui
         editscheduledialog.h editscheduledialog.cpp editscheduledialog.ui
         calenderwidget.h calenderwidget.cpp calenderwidget.ui
+        schedulelistwidget.h schedulelistwidget.cpp schedulelistwidget.ui
         schedule.h schedule.cpp
         schedule.h schedule.cpp
         dbmanager.h dbmanager.cpp

@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>240</y>
+     <x>50</x>
+     <y>260</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -29,22 +29,12 @@
     <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
    </property>
   </widget>
-  <widget class="QListView" name="scheduleListView">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>61</y>
-     <width>381</width>
-     <height>171</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="dateLbl">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>0</x>
      <y>10</y>
-     <width>271</width>
+     <width>401</width>
      <height>31</height>
     </rect>
    </property>
@@ -71,6 +61,16 @@
    </property>
    <property name="text">
     <string>추가</string>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="scheduleList">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>381</width>
+     <height>191</height>
+    </rect>
    </property>
   </widget>
  </widget>
