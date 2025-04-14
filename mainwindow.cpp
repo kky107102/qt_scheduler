@@ -6,6 +6,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    /////
+    editScheduleDialog editDialog(this);
+    editDialog.exec();
 }
 
 MainWindow::~MainWindow()
