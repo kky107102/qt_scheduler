@@ -6,7 +6,7 @@
 #include <QListWidgetItem>
 #include "editscheduledialog.h"
 #include "scheduleListWidget.h"
-
+#include "schedule.h"
 
 namespace Ui {
 class showScheduleDialog;
@@ -16,12 +16,10 @@ class showScheduleDialog : public QDialog
 {
     Q_OBJECT
     QDate date;
-    int currentIdx;
-    editScheduleDialog* add;
-    editScheduleDialog* edit;
-    editScheduleDialog* info;
+    editScheduleDialog* dial;
     QVector<QListWidgetItem*> listItems;
     QVector<scheduleListWidget*> listWidgets;
+    QVector<Schedule*> schedules;
 
 public:
     explicit showScheduleDialog(QDate date, QWidget *parent);
@@ -33,10 +31,13 @@ private:
 
 public slots:
     void newSchedule();
-    void addSchedule();
-    void scheduleInfo();
-    void editSchedule();
-    void removeSchedule();
+    //void addSchedule();
+    void showSchedule();
+    void editSchedule(QListWidgetItem*);
+    void scheduleInfo(scheduleListWidget*);
+    void removeSchedule(scheduleListWidget*);
+signals:
+    void show_signal();
 };
 
 #endif // SHOWSCHEDULEDIALOG_H

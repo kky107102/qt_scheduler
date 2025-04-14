@@ -13,10 +13,12 @@ class editScheduleDialog;
 class editScheduleDialog : public QDialog
 {
     Q_OBJECT
+    Schedule* s;
 
 public:
-    explicit editScheduleDialog(QWidget *parent = nullptr);
+    explicit editScheduleDialog(QString mod, Schedule *s = nullptr, QWidget *parent = nullptr);
     ~editScheduleDialog();
+    Schedule* getSchedule();
 
 private:
     Ui::editScheduleDialog *ui;

@@ -53,6 +53,9 @@
    </property>
   </widget>
   <widget class="QLineEdit" name="locationLineEdit">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -160,7 +163,7 @@
     <string>까지</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLabel" name="title">
    <property name="geometry">
     <rect>
      <x>0</x>

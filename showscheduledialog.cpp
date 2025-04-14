@@ -6,19 +6,11 @@ showScheduleDialog::showScheduleDialog(QDate date, QWidget *parent)
     , ui(new Ui::showScheduleDialog)
 {
     ui->setupUi(this);
-    ui->dateLbl->setText(getDate().toString("yyyy년 MM월 dd일"));
+    ui->dateLbl->setText(getDate().toString("yyyy년 MM월 dd일")); // 현재 date만 받아오고 있어서 datetime받아 date만 세팅하기
 
     connect(ui->addScheduleBtn, &QPushButton::clicked, this, &showScheduleDialog::newSchedule);
-    connect(ui->scheduleList, &QListWidget::clicked, this, &showScheduleDialog::editSchedule);
-    //connect(ui->scheduleList, &QListWidget::clicked, this, &showScheduleDialog::addSchedule);
-
-    showScheduleDialog::addSchedule();
-    showScheduleDialog::addSchedule();
-    for (int idx = 0; idx < listWidgets.size(); idx++){
-        currentIdx = idx;
-        connect(listWidgets[idx], &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
-        connect(listWidgets[idx], &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
-    }
+    connect(this, &showScheduleDialog::show_signal, this, &showScheduleDialog::showSchedule);
+    connect(ui->scheduleList, &QListWidget::itemClicked, this, &showScheduleDialog::editSchedule);
 }
 
 showScheduleDialog::~showScheduleDialog()
@@ -31,36 +23,66 @@ QDate showScheduleDialog::getDate(){
 }
 
 void showScheduleDialog::newSchedule(){
-    add = new editScheduleDialog(); // label로 상단 제목 전달 (추가, 수정, 보기)
-    add->show();
-}
-
-void showScheduleDialog::editSchedule(){
-    edit = new editScheduleDialog(); // label로 상단 제목 전달 (추가, 수정, 보기)
-    edit->show();
-}
-
-void showScheduleDialog::scheduleInfo(){
-    info = new editScheduleDialog(); // label로 상단 제목 전달 (추가, 수정, 보기-currentIdx)
-    info->show();
-}
-
-void showScheduleDialog::addSchedule(){
-    listItems.push_back(new QListWidgetItem(ui->scheduleList));
-    listWidgets.push_back(new scheduleListWidget(ui->scheduleList));
-    for (int i = 0; i < listWidgets.size(); i++){
-        listItems[i]->setSizeHint(listWidgets[i]->sizeHint());
-        ui->scheduleList->setItemWidget(listItems[i],listWidgets[i]);
+    dial = new editScheduleDialog("add"); // label로 상단 제목 전달 (추가, 수정, 보기)
+    if (dial->exec() == QDialog::Accepted) {
+        schedules.push_back(dial->getSchedule());
+        emit show_signal();
     }
 }
 
-void showScheduleDialog::removeSchedule(){
-    if (currentIdx != NULL){
-        //QListWidgetItem* removeItem =
-        ui->scheduleList->takeItem(currentIdx);
-        listItems.removeAt(currentIdx);
-        listWidgets.removeAt(currentIdx);
+void showScheduleDialog::showSchedule(){
+    auto* item = new QListWidgetItem(ui->scheduleList);
+    auto* widget = new scheduleListWidget(schedules.back()->getStartTime(), schedules.back()->getScheduleName(), ui->scheduleList);
+
+    connect(widget, &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
+    connect(widget, &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
+
+    item->setSizeHint(widget->sizeHint());
+    ui->scheduleList->addItem(item);
+    ui->scheduleList->setItemWidget(item, widget);
+
+    listItems.push_back(item);
+    listWidgets.push_back(widget);
+}
+
+void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
+    for (int i = 0; i < listItems.size(); ++i) {
+        if (listItems[i] == targetItem){
+            dial = new editScheduleDialog("edit", schedules[i]);
+            if (dial->exec() == QDialog::Accepted) {
+                listItems[i] = targetItem;
+                listWidgets[i]->setTaskName(dial->getSchedule()->getScheduleName());
+                listWidgets[i]->setStartTime(dial->getSchedule()->getStartTime());
+                schedules[i] = dial->getSchedule();
+            }
+        }
     }
 }
+
+void showScheduleDialog::scheduleInfo(scheduleListWidget* target){
+    qDebug() << "info";
+    for (int i = 0; i < listWidgets.size(); ++i) {
+        if (listWidgets[i] == target){
+            dial = new editScheduleDialog("info", schedules[i]);
+            dial->show();
+        }
+    }
+
+}
+
+void showScheduleDialog::removeSchedule(scheduleListWidget* target){
+    qDebug() << target;
+    for (int i = 0; i < listWidgets.size(); ++i) {
+        if (listWidgets[i] == target){
+            QListWidgetItem* item = listItems[i];
+            ui->scheduleList->takeItem(ui->scheduleList->row(item));
+            listItems.removeAt(i);
+            listWidgets.removeAt(i);
+            schedules.removeAt(i);
+        }
+    }
+}
+
+
 
 

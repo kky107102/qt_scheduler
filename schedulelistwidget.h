@@ -12,15 +12,17 @@ class scheduleListWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit scheduleListWidget(QWidget *parent = nullptr);
+    explicit scheduleListWidget(QDateTime startTime, QString task, QWidget *parent = nullptr);
     ~scheduleListWidget();
     QString getTaskName();
+    void setTaskName(QString);
+    void setStartTime(QDateTime);
 public slots:
     void slot_del();
     void slot_show();
 signals:
-    void delclicked();
-    void showclicked();
+    void delclicked(scheduleListWidget*);
+    void showclicked(scheduleListWidget*);
 private:
     Ui::scheduleListWidget *ui;
 };
