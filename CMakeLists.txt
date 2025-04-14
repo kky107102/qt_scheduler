@@ -26,6 +26,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         showscheduledialog.h showscheduledialog.cpp showscheduledialog.ui
         editscheduledialog.h editscheduledialog.cpp editscheduledialog.ui
         calenderwidget.h calenderwidget.cpp calenderwidget.ui
+        schedulelistwidget.h schedulelistwidget.cpp schedulelistwidget.ui
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET scheduler APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
