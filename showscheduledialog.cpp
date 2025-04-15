@@ -47,7 +47,7 @@ QDate showScheduleDialog::getDate(){
 }
 
 void showScheduleDialog::newSchedule(){
-    dial = new editScheduleDialog("add"); // label로 상단 제목 전달 (추가, 수정, 보기)
+    dial = new editScheduleDialog("add", this->getDate()); // label로 상단 제목 전달 (추가, 수정, 보기)
     if (dial->exec() == QDialog::Accepted) {
         schedules.push_back(dial->getSchedule());
 
@@ -76,7 +76,7 @@ void showScheduleDialog::addSchedule(){
 void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
     for (int i = 0; i < listItems.size(); ++i) {
         if (listItems[i] == targetItem){
-            dial = new editScheduleDialog("edit", schedules[i]);
+            dial = new editScheduleDialog("edit", this->getDate(), schedules[i]);
             if (dial->exec() == QDialog::Accepted) {
                 listItems[i] = targetItem;
                 listWidgets[i]->setTaskName(dial->getSchedule()->getScheduleName());
@@ -94,8 +94,8 @@ void showScheduleDialog::scheduleInfo(scheduleListWidget* target){
     qDebug() << "info";
     for (int i = 0; i < listWidgets.size(); ++i) {
         if (listWidgets[i] == target){
-            dial = new editScheduleDialog("info", schedules[i]);
-            dial->show();
+            dial = new editScheduleDialog("info", this->getDate(), schedules[i]);
+            dial->exec();
         }
     }
 

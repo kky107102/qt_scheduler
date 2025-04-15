@@ -3,6 +3,9 @@
 
 #include <QDialog>
 #include <QDebug>
+#include <QDate>
+#include <QDateTime>
+#include <QPushButton>
 #include "Schedule.h"
 #include "dbmanager.h"
 
@@ -16,7 +19,7 @@ class editScheduleDialog : public QDialog
     Schedule* s;
 
 public:
-    explicit editScheduleDialog(QString mod, Schedule *s = nullptr, QWidget *parent = nullptr);
+    explicit editScheduleDialog(QString mod,  QDate date, Schedule *s = nullptr, QWidget *parent = nullptr);
     ~editScheduleDialog();
     Schedule* getSchedule();
 
@@ -24,7 +27,11 @@ private:
     Ui::editScheduleDialog *ui;
 
 private slots:
-    void onAccepted();
+    void onOkClicked();
+    void onCancelClicked();
+    void saveScheduledata();
+signals:
+    void signal_done();
 };
 
 #endif // EDITSCHEDULEDIALOG_H
