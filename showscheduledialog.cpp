@@ -121,9 +121,6 @@ void showScheduleDialog::getScheduleList()
         return;
     }
 
-    if (sList.empty())
-        return;
-
     for (const Schedule& s : sList)
     {
         qDebug() << s.getScheduleId();
