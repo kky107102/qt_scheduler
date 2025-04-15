@@ -78,12 +78,10 @@ void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
         if (listItems[i] == targetItem){
             dial = new editScheduleDialog("edit", this->getDate(), schedules[i]);
             if (dial->exec() == QDialog::Accepted) {
-                int id = schedules[i]->getScheduleId();
                 listItems[i] = targetItem;
                 listWidgets[i]->setTaskName(dial->getSchedule()->getScheduleName());
                 listWidgets[i]->setStartTime(dial->getSchedule()->getStartTime());
                 schedules[i] = dial->getSchedule();
-                schedules[i]->setScheduleId(id);
 
                 // db에서 수정
                 dbManager::instance().modifySchedule(*schedules.at(i));
@@ -124,6 +122,7 @@ void showScheduleDialog::getScheduleList()
 {
     QList<Schedule> sList = dbManager::instance().getSchedulesForDate(date);
 
+    qDebug() << "Schedule :" << sList.isEmpty();
     if (sList.isEmpty())
     {
         qDebug() << "[DEBUG] schedule list is empty";
@@ -132,6 +131,7 @@ void showScheduleDialog::getScheduleList()
 
     for (const Schedule& s : sList)
     {
+        qDebug() << s.getScheduleId();
         Schedule* new_s = new Schedule(s);
         schedules.push_back(new_s);
 
