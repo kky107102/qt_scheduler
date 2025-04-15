@@ -21,6 +21,7 @@ calenderWidget::~calenderWidget()
 
 bool calenderWidget::getSchedules()
 {
+    schedules.clear();
     int year = ui->calendarWidget->yearShown();
     int month = ui->calendarWidget->monthShown();
     QDate firstDate(year, month, 1);
@@ -57,8 +58,9 @@ void calenderWidget::paintSchedules()
 
     QTextCharFormat defaultFormat;
     defaultFormat.setBackground(Qt::white);
-    for (QDate d = firstDate; d <= lastDate; d = d.addDays(1))
-        ui->calendarWidget->setDateTextFormat(d, defaultFormat);
+    for (QDate d = firstDate; d <= lastDate; d = d.addDays(1)) {
+        ui->calendarWidget->setDateTextFormat(d, QTextCharFormat());
+    }
 
 
     QTextCharFormat highlightFormat;
