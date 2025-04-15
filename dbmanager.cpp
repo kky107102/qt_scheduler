@@ -60,6 +60,14 @@ bool dbManager::initDb()
     return true;
 }
 
+bool dbManager::isDateInSchedule(const QDateTime& date, const QDateTime& start, const QDateTime& end)
+{
+    if (date >= start && date <= end)
+        return true;
+    else
+        return false;
+}
+
 bool dbManager::createScheduleTable()
 {
     QSqlQuery query(db);
@@ -172,4 +180,36 @@ QList<Schedule> dbManager::searchSchedule(const QDateTime &start, const QDateTim
     }
 
     return scheduleList;
+}
+
+QList<Schedule> dbManager::getSchedulesForDate(const QDateTime &date)
+{
+    QList<Schedule> sList;
+
+    QSqlQuery query(db);
+    query.prepare("SELECT * FROM scheduleTbl");
+    if (!query.exec())
+    {
+        qDebug() << "[ERROR] failed to query.exec()";
+        return sList;
+    }
+
+    while(query.next())
+    {
+        QDateTime sTime = query.value("start").toDateTime();
+        QDateTime eTime = query.value("end").toDateTime();
+
+        if (isDateInSchedule(date, sTime, eTime)) {
+            Schedule s;
+            s.setScheduleId(query.value("id").toInt());
+            s.setScheduleName(query.value("name").toString());
+            s.setStartTime(query.value("start").toDateTime());
+            s.setEndTime(query.value("end").toDateTime());
+            s.setLocation(query.value("location").toString());
+            s.setMemo(query.value("memo").toString());
+            sList.append(s);
+        }
+    }
+
+    return sList;
 }

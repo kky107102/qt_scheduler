@@ -9,6 +9,8 @@ calenderWidget::calenderWidget(QWidget *parent)
     ui->calendarWidget->showToday();
     getSchedules();
     paintSchedules();
+
+    connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &calenderWidget::onClickedDate);
 }
 
 calenderWidget::~calenderWidget()
@@ -61,7 +63,9 @@ void calenderWidget::paintSchedules()
 }
 
 // slots
-void calenderWidget::onClickedDate()
+void calenderWidget::onClickedDate(const QDate &date)
 {
-    qDebug() << "onClickedDate()";
+    qDebug() << "onClickedDate called";
+    scheduleDialog = new showScheduleDialog(date, this);
+    scheduleDialog->exec();
 }

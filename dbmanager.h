@@ -23,6 +23,7 @@ private:
 
     bool initDb();
     bool createScheduleTable();
+    bool isDateInSchedule(const QDateTime& date, const QDateTime& start, const QDateTime& end);
 
     QString dbName;
     QString dbPath;
@@ -37,6 +38,8 @@ public:
     bool deleteSchedule(const Schedule& s);
     bool modifySchedule(const Schedule& s);
     QList<Schedule> searchSchedule(const QDateTime &start, const QDateTime &end);
+
+    QList<Schedule> getSchedulesForDate(const QDateTime &date);
 };
 
 #endif // DBMANAGER_H

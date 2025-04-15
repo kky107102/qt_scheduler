@@ -27,6 +27,16 @@ Schedule::Schedule() {}
 Schedule::Schedule(const QString &name, const QDateTime &start, const QDateTime &end,
                    const QString &location, const QString &memo)
     : scheduleName(name), startTime(start), endTime(end), location(location), memo(memo) {}
+Schedule::Schedule(const Schedule& s)
+{
+    this->scheduleId = s.getScheduleId();
+    this->scheduleName = s.getScheduleName();
+    this->startTime = s.getStartTime();
+    this->endTime = s.getEndTime();
+    this->location = s.getLocation();
+    this->memo = s.getMemo();
+}
+
 Schedule::~Schedule() {}
 
 // getter

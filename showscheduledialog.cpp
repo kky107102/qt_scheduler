@@ -11,10 +11,17 @@ showScheduleDialog::showScheduleDialog(QDate date, QWidget *parent)
     connect(ui->addScheduleBtn, &QPushButton::clicked, this, &showScheduleDialog::newSchedule);
     connect(this, &showScheduleDialog::show_signal, this, &showScheduleDialog::showSchedule);
     connect(ui->scheduleList, &QListWidget::itemClicked, this, &showScheduleDialog::editSchedule);
+    getScheduleList();
+    showSchedule();
 }
 
 showScheduleDialog::~showScheduleDialog()
 {
+    // yjseo
+    for (Schedule * s : schedules)
+        delete s;
+    schedules.clear();
+
     delete ui;
 }
 
@@ -83,6 +90,19 @@ void showScheduleDialog::removeSchedule(scheduleListWidget* target){
     }
 }
 
+void showScheduleDialog::getScheduleList()
+{
+    QTime time(0, 0, 0);
+    QDateTime dateTime(date, time);
+    QList<Schedule> sList = dbManager::instance().getSchedulesForDate(dateTime);
 
+    if (sList.empty())
+        return;
 
-
+    for (const Schedule& s : sList)
+    {
+        qDebug() << s.getScheduleId();
+        Schedule* new_s = new Schedule(s);
+        schedules.push_back(new_s);
+    }
+}
