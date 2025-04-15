@@ -6,7 +6,7 @@ showScheduleDialog::showScheduleDialog(QDate date, QWidget *parent)
     , ui(new Ui::showScheduleDialog)
 {
     ui->setupUi(this);
-    ui->dateLbl->setText(getDate().toString("yyyy년 MM월 dd일")); // 현재 date만 받아오고 있어서 datetime받아 date만 세팅하기
+    ui->dateLbl->setText(getDate().toString("yyyy년 MM월 dd일"));
 
     connect(ui->addScheduleBtn, &QPushButton::clicked, this, &showScheduleDialog::newSchedule);
     connect(this, &showScheduleDialog::add_signal, this, &showScheduleDialog::addSchedule);
@@ -49,28 +49,34 @@ QDate showScheduleDialog::getDate(){
 void showScheduleDialog::newSchedule(){
     dial = new editScheduleDialog("add", this->getDate()); // label로 상단 제목 전달 (추가, 수정, 보기)
     if (dial->exec() == QDialog::Accepted) {
-        schedules.push_back(dial->getSchedule());
-
-        // db에 삽입
-        dbManager::instance().insertSchedule(*schedules.back());
-
-        emit add_signal();
+        qDebug() << "클릭날짜" << this->getDate();
+        if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
+            schedules.push_back(dial->getSchedule());
+            // db에 삽입
+            dbManager::instance().insertSchedule(*schedules.back());
+            emit add_signal();
+        }
+        else {
+            dbManager::instance().insertSchedule(*(dial->getSchedule()));
+        }
     }
 }
 
 void showScheduleDialog::addSchedule(){
-    auto* item = new QListWidgetItem(ui->scheduleList);
-    auto* widget = new scheduleListWidget(schedules.back()->getStartTime(), schedules.back()->getScheduleName(), ui->scheduleList);
 
-    connect(widget, &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
-    connect(widget, &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
+        auto* item = new QListWidgetItem(ui->scheduleList);
+        auto* widget = new scheduleListWidget(schedules.back()->getStartTime(), schedules.back()->getScheduleName(), ui->scheduleList);
 
-    item->setSizeHint(widget->sizeHint());
-    ui->scheduleList->addItem(item);
-    ui->scheduleList->setItemWidget(item, widget);
+        connect(widget, &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
+        connect(widget, &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
 
-    listItems.push_back(item);
-    listWidgets.push_back(widget);
+        item->setSizeHint(widget->sizeHint());
+        ui->scheduleList->addItem(item);
+        ui->scheduleList->setItemWidget(item, widget);
+
+        listItems.push_back(item);
+        listWidgets.push_back(widget);
+
 }
 
 void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
@@ -78,13 +84,24 @@ void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
         if (listItems[i] == targetItem){
             dial = new editScheduleDialog("edit", this->getDate(), schedules[i]);
             if (dial->exec() == QDialog::Accepted) {
-                listItems[i] = targetItem;
-                listWidgets[i]->setTaskName(dial->getSchedule()->getScheduleName());
-                listWidgets[i]->setStartTime(dial->getSchedule()->getStartTime());
-                schedules[i] = dial->getSchedule();
-
-                // db에서 수정
-                dbManager::instance().modifySchedule(*schedules.at(i));
+                int id = schedules[i]->getScheduleId();
+                if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
+                    //listItems[i] = targetItem;
+                    listWidgets[i]->setTaskName(dial->getSchedule()->getScheduleName());
+                    listWidgets[i]->setStartTime(dial->getSchedule()->getStartTime());
+                    schedules[i] = dial->getSchedule();
+                    schedules[i]->setScheduleId(id);
+                    // db에서 수정
+                    dbManager::instance().modifySchedule(*schedules.at(i));
+                }
+                else {
+                    ui->scheduleList->takeItem(ui->scheduleList->row(listItems[i]));
+                    listItems.removeAt(i);
+                    listWidgets.removeAt(i);
+                    schedules.removeAt(i);
+                    dial->getSchedule()->setScheduleId(id);
+                    dbManager::instance().modifySchedule(*(dial->getSchedule()));
+                }
             }
         }
     }
@@ -98,7 +115,6 @@ void showScheduleDialog::scheduleInfo(scheduleListWidget* target){
             dial->exec();
         }
     }
-
 }
 
 void showScheduleDialog::removeSchedule(scheduleListWidget* target){
