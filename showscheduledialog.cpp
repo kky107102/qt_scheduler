@@ -17,6 +17,11 @@ showScheduleDialog::showScheduleDialog(QDate date, QWidget *parent)
 
 showScheduleDialog::~showScheduleDialog()
 {
+    // yjseo
+    for (Schedule * s : schedules)
+        delete s;
+    schedules.clear();
+
     delete ui;
 }
 
@@ -108,12 +113,17 @@ void showScheduleDialog::getScheduleList()
     QTime time(0, 0, 0);
     QDateTime dateTime(date, time);
     QList<Schedule> sList = dbManager::instance().getSchedulesForDate(dateTime);
+
     qDebug() << "Schedule :" << sList.isEmpty();
     if (sList.isEmpty())
     {
         qDebug() << "[DEBUG] schedule list is empty" << sList.isEmpty();
         return;
     }
+
+    if (sList.empty())
+        return;
+
     for (const Schedule& s : sList)
     {
         qDebug() << s.getScheduleId();
