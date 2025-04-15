@@ -2,18 +2,19 @@
 #include "ui_editscheduledialog.h"
 
 editScheduleDialog::editScheduleDialog(QString mod, QDate date, Schedule *s, QWidget *parent)
-    : QDialog(parent)
+    : date(date), mod(mod), QDialog(parent)
     , ui(new Ui::editScheduleDialog)
 {
     ui->setupUi(this);
     // default dateTime
+    ui->currentDate->setText(this->getDate().toString("yyyy년 MM월 dd일"));
     ui->startDateTimeEdit->setDateTime(QDateTime(date, QTime().currentTime()));
     ui->endDateTimeEdit->setDateTime(QDateTime(date, QTime().currentTime()));
-    if (mod == "add"){
+    if (this->getMod() == "add"){
         ui->title->setText("일정 추가");
     }
-    else if (mod == "edit"){
-            qDebug() << s->getScheduleName();
+    else if (this->getMod() == "edit"){
+        qDebug() << s->getScheduleName();
         ui->title->setText("일정 수정");
         ui->taskNmLineEdit->setText(s->getScheduleName());
         ui->startDateTimeEdit->setDateTime(s->getStartTime());
@@ -21,7 +22,7 @@ editScheduleDialog::editScheduleDialog(QString mod, QDate date, Schedule *s, QWi
         ui->locationLineEdit->setText(s->getLocation());
         ui->memoTextEdit->setText(s->getMemo());
     }
-    else if (mod == "info"){
+    else if (this->getMod() == "info"){
         ui->title->setText("보기");
         ui->taskNmLineEdit->setText(s->getScheduleName());
         ui->startDateTimeEdit->setDateTime(s->getStartTime());
@@ -46,14 +47,17 @@ editScheduleDialog::~editScheduleDialog()
 void editScheduleDialog::onOkClicked()
 {
     if (ui->taskNmLineEdit->text().isEmpty()){
-        QMessageBox::critical(this,"Critical 다이얼로그","task를 입력하세요.",QMessageBox::Retry);
+        QMessageBox::critical(this,"경고","task를 입력하세요.",QMessageBox::Retry);
         return;
     }
     else if(ui->startDateTimeEdit->dateTime() >= ui->endDateTimeEdit->dateTime()){
-        QMessageBox::critical(this,"Critical 다이얼로그","잘못된 시간 설정입니다.",QMessageBox::Retry);
+        QMessageBox::critical(this,"경고","잘못된 시간 설정입니다.",QMessageBox::Retry);
         //qDebug() << "잘못된 시간설정입니다.";
         return;
     }
+    // else if(ui->startDateTimeEdit->dateTime().date() > this->getDate() || this->getDate() > ui->endDateTimeEdit->dateTime().date()){
+    //     QMessageBox::critical(this,"경고","잘못된 날짜 설정입니다.",QMessageBox::Retry);
+    // }
     else{
         saveScheduledata();
         accept();
@@ -75,6 +79,3 @@ void editScheduleDialog::saveScheduledata()
     s->setMemo(ui->memoTextEdit->toPlainText());
 }
 
-Schedule* editScheduleDialog::getSchedule(){
-    return s;
-}
