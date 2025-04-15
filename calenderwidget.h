@@ -5,8 +5,8 @@
 #include <QVector>
 #include <QTextCharFormat>
 #include "showScheduleDialog.h"
+#include "searchdialog.h"
 #include "Schedule.h"
-#include "dbManager.h"
 
 namespace Ui {
 class calenderWidget;
@@ -27,9 +27,11 @@ private:
     Ui::calenderWidget *ui;
     QVector<Schedule> schedules;
     showScheduleDialog * scheduleDialog;
+    searchDialog * searchdialog;
 
 private slots:
     void onClickedDate(const QDate &date); // eidtscheduledialog 호출
+    void onClickedSearchBtn();
 };
 
 #endif // CALENDERWIDGET_H

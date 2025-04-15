@@ -11,6 +11,7 @@ calenderWidget::calenderWidget(QWidget *parent)
     paintSchedules();
 
     connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &calenderWidget::onClickedDate);
+    connect(ui->searchBtn, &QPushButton::clicked, this, &calenderWidget::onClickedSearchBtn);
 }
 
 calenderWidget::~calenderWidget()
@@ -37,8 +38,12 @@ bool calenderWidget::getSchedules()
         return false;
     }
 
+    qDebug() << "[DEBUG] schedules: ";
     for (const Schedule& s : sList)
+    {
         schedules.append(s);
+        qDebug() << schedules.back().getScheduleName();
+    }
 
     return true;
 }
@@ -80,4 +85,11 @@ void calenderWidget::onClickedDate(const QDate &date)
         getSchedules();
         paintSchedules();
     }
+}
+
+void calenderWidget::onClickedSearchBtn()
+{
+    qDebug() << "onClickedSearchBtn called";
+    searchdialog = new searchDialog(this);
+    searchdialog->exec();
 }

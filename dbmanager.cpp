@@ -60,7 +60,7 @@ bool dbManager::initDb()
     return true;
 }
 
-bool dbManager::isDateInSchedule(const QDateTime& date, const QDateTime& start, const QDateTime& end)
+bool dbManager::isDateInSchedule(const QDate& date, const QDate& start, const QDate& end)
 {
     if (date >= start && date <= end)
         return true;
@@ -182,7 +182,7 @@ QList<Schedule> dbManager::searchSchedule(const QDateTime &start, const QDateTim
     return scheduleList;
 }
 
-QList<Schedule> dbManager::getSchedulesForDate(const QDateTime &date)
+QList<Schedule> dbManager::getSchedulesForDate(const QDate& date)
 {
     QList<Schedule> sList;
 
@@ -196,8 +196,8 @@ QList<Schedule> dbManager::getSchedulesForDate(const QDateTime &date)
 
     while(query.next())
     {
-        QDateTime sTime = query.value("start").toDateTime();
-        QDateTime eTime = query.value("end").toDateTime();
+        QDate sTime = query.value("start").toDate();
+        QDate eTime = query.value("end").toDate();
         if (isDateInSchedule(date, sTime, eTime)) {
             Schedule s;
             s.setScheduleId(query.value("id").toInt());
@@ -208,6 +208,38 @@ QList<Schedule> dbManager::getSchedulesForDate(const QDateTime &date)
             s.setMemo(query.value("memo").toString());
             sList.append(s);
         }
+    }
+
+    return sList;
+}
+
+QList<Schedule> dbManager::searchScheduleName(const QString& name)
+{
+    QList<Schedule> sList;
+
+    QSqlQuery query(db);
+    query.prepare("SELECT * FROM scheduleTbl "
+                  "WHERE name = :name");
+
+    query.bindValue(":name", name);
+
+    if (!query.exec())
+    {
+        qDebug() << "[ERROR] failed to query.exec()";
+        return sList;
+    }
+
+    while (query.next())
+    {
+        Schedule s;
+        s.setScheduleId(query.value("id").toInt());
+        s.setScheduleName(query.value("name").toString());
+        s.setStartTime(query.value("start").toDateTime());
+        s.setEndTime(query.value("end").toDateTime());
+        s.setLocation(query.value("location").toString());
+        s.setMemo(query.value("memo").toString());
+
+        sList.append(s);
     }
 
     return sList;

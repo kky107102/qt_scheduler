@@ -122,13 +122,11 @@ void showScheduleDialog::removeSchedule(scheduleListWidget* target){
 
 void showScheduleDialog::getScheduleList()
 {
-    QTime time(0, 0, 0);
-    QDateTime dateTime(date, time);
-    QList<Schedule> sList = dbManager::instance().getSchedulesForDate(dateTime);
+    QList<Schedule> sList = dbManager::instance().getSchedulesForDate(date);
 
     if (sList.isEmpty())
     {
-        qDebug() << "[DEBUG] schedule list is empty" << sList.isEmpty();
+        qDebug() << "[DEBUG] schedule list is empty";
         return;
     }
 
