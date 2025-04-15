@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QDate>
 #include <QListWidgetItem>
+#include <QDateTime>
 #include "editscheduledialog.h"
 #include "scheduleListWidget.h"
 #include "schedule.h"
@@ -36,6 +37,10 @@ public slots:
     void editSchedule(QListWidgetItem*);
     void scheduleInfo(scheduleListWidget*);
     void removeSchedule(scheduleListWidget*);
+
+    // yjseo
+    // yjseo
+    void getScheduleList();
 signals:
     void show_signal();
 };
