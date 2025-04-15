@@ -17,11 +17,6 @@ showScheduleDialog::showScheduleDialog(QDate date, QWidget *parent)
 
 showScheduleDialog::~showScheduleDialog()
 {
-    // yjseo
-    for (Schedule * s : schedules)
-        delete s;
-    schedules.clear();
-
     delete ui;
 }
 
@@ -33,11 +28,22 @@ void showScheduleDialog::newSchedule(){
     dial = new editScheduleDialog("add"); // label로 상단 제목 전달 (추가, 수정, 보기)
     if (dial->exec() == QDialog::Accepted) {
         schedules.push_back(dial->getSchedule());
+
+        // db에 삽입
+        dbManager::instance().insertSchedule(*schedules.back());
+
         emit show_signal();
     }
 }
 
 void showScheduleDialog::showSchedule(){
+
+    if (schedules.isEmpty())
+    {
+        qDebug() << "[DEBUG] schedule is empty";
+        return;
+    }
+
     auto* item = new QListWidgetItem(ui->scheduleList);
     auto* widget = new scheduleListWidget(schedules.back()->getStartTime(), schedules.back()->getScheduleName(), ui->scheduleList);
 
@@ -61,6 +67,9 @@ void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
                 listWidgets[i]->setTaskName(dial->getSchedule()->getScheduleName());
                 listWidgets[i]->setStartTime(dial->getSchedule()->getStartTime());
                 schedules[i] = dial->getSchedule();
+
+                // db에서 수정
+                dbManager::instance().modifySchedule(*schedules.at(i));
             }
         }
     }
@@ -83,6 +92,10 @@ void showScheduleDialog::removeSchedule(scheduleListWidget* target){
         if (listWidgets[i] == target){
             QListWidgetItem* item = listItems[i];
             ui->scheduleList->takeItem(ui->scheduleList->row(item));
+
+            // db에서 삭제
+            dbManager::instance().deleteSchedule(*schedules.at(i));
+
             listItems.removeAt(i);
             listWidgets.removeAt(i);
             schedules.removeAt(i);
@@ -95,10 +108,12 @@ void showScheduleDialog::getScheduleList()
     QTime time(0, 0, 0);
     QDateTime dateTime(date, time);
     QList<Schedule> sList = dbManager::instance().getSchedulesForDate(dateTime);
-
-    if (sList.empty())
+    qDebug() << "Schedule :" << sList.isEmpty();
+    if (sList.isEmpty())
+    {
+        qDebug() << "[DEBUG] schedule list is empty" << sList.isEmpty();
         return;
-
+    }
     for (const Schedule& s : sList)
     {
         qDebug() << s.getScheduleId();

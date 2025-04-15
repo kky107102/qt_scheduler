@@ -34,6 +34,12 @@ bool calenderWidget::getSchedules()
     qDebug() << "endDate:" << endDateTime.toString(Qt::ISODate);
 
     QList<Schedule> sList = dbManager::instance().searchSchedule(startDateTime, endDateTime);
+
+    if (sList.isEmpty())
+    {
+        return false;
+    }
+
     for (const Schedule& s : sList)
     {
         schedules.append(s);
