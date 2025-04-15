@@ -9,7 +9,7 @@ showScheduleDialog::showScheduleDialog(QDate date, QWidget *parent)
     ui->dateLbl->setText(getDate().toString("yyyy년 MM월 dd일")); // 현재 date만 받아오고 있어서 datetime받아 date만 세팅하기
 
     connect(ui->addScheduleBtn, &QPushButton::clicked, this, &showScheduleDialog::newSchedule);
-    connect(this, &showScheduleDialog::show_signal, this, &showScheduleDialog::showSchedule);
+    connect(this, &showScheduleDialog::add_signal, this, &showScheduleDialog::addSchedule);
     connect(ui->scheduleList, &QListWidget::itemClicked, this, &showScheduleDialog::editSchedule);
     getScheduleList();
     showSchedule();
@@ -25,6 +25,23 @@ showScheduleDialog::~showScheduleDialog()
     delete ui;
 }
 
+void showScheduleDialog::showSchedule(){
+    if (schedules.isEmpty())
+    {
+        qDebug() << "[DEBUG] schedule is empty";
+        return;
+    }
+
+    for (int i = 0; i < listItems.size(); i++){
+        connect(listWidgets[i], &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
+        connect(listWidgets[i], &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
+
+        listItems[i]->setSizeHint(listWidgets[i]->sizeHint());
+        ui->scheduleList->addItem(listItems[i]);
+        ui->scheduleList->setItemWidget(listItems[i], listWidgets[i]);
+    }
+}
+
 QDate showScheduleDialog::getDate(){
     return this->date;
 }
@@ -37,18 +54,11 @@ void showScheduleDialog::newSchedule(){
         // db에 삽입
         dbManager::instance().insertSchedule(*schedules.back());
 
-        emit show_signal();
+        emit add_signal();
     }
 }
 
-void showScheduleDialog::showSchedule(){
-
-    if (schedules.isEmpty())
-    {
-        qDebug() << "[DEBUG] schedule is empty";
-        return;
-    }
-
+void showScheduleDialog::addSchedule(){
     auto* item = new QListWidgetItem(ui->scheduleList);
     auto* widget = new scheduleListWidget(schedules.back()->getStartTime(), schedules.back()->getScheduleName(), ui->scheduleList);
 
@@ -121,13 +131,15 @@ void showScheduleDialog::getScheduleList()
         return;
     }
 
-    if (sList.empty())
-        return;
-
     for (const Schedule& s : sList)
     {
         qDebug() << s.getScheduleId();
         Schedule* new_s = new Schedule(s);
         schedules.push_back(new_s);
+
+        QListWidgetItem* item = new QListWidgetItem(ui->scheduleList);
+        scheduleListWidget* widget = new scheduleListWidget(new_s->getStartTime(), new_s->getScheduleName(), ui->scheduleList);
+        listItems.push_back(item);
+        listWidgets.push_back(widget);
     }
 }

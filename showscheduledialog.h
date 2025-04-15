@@ -32,7 +32,7 @@ private:
 
 public slots:
     void newSchedule();
-    //void addSchedule();
+    void addSchedule();
     void showSchedule();
     void editSchedule(QListWidgetItem*);
     void scheduleInfo(scheduleListWidget*);
@@ -42,7 +42,7 @@ public slots:
     // yjseo
     void getScheduleList();
 signals:
-    void show_signal();
+    void add_signal();
 };
 
 #endif // SHOWSCHEDULEDIALOG_H
