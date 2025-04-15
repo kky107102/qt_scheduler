@@ -10,6 +10,8 @@ calenderWidget::calenderWidget(QWidget *parent)
     getSchedules();
     paintSchedules();
 
+    ui->calendarWidget->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
+
     connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &calenderWidget::onClickedDate);
     connect(ui->searchBtn, &QPushButton::clicked, this, &calenderWidget::onClickedSearchBtn);
 }
@@ -57,24 +59,28 @@ void calenderWidget::paintSchedules()
     QDate lastDate = firstDate.addMonths(1).addDays(-1);
 
     QTextCharFormat defaultFormat;
-    defaultFormat.setBackground(Qt::white);
+    defaultFormat.setBackground(QColor("#E4EFE7"));
+    defaultFormat.setForeground(Qt::black);
+    defaultFormat.setFontWeight(QFont::Normal);
     for (QDate d = firstDate; d <= lastDate; d = d.addDays(1)) {
-        ui->calendarWidget->setDateTextFormat(d, QTextCharFormat());
+        ui->calendarWidget->setDateTextFormat(d, defaultFormat);
     }
 
-
     QTextCharFormat highlightFormat;
-    highlightFormat.setBackground(Qt::green);
+    highlightFormat.setBackground(QBrush(QColor("#B9D2AB")));
+    highlightFormat.setForeground(Qt::white);
+    highlightFormat.setFontWeight(QFont::Bold);
+    highlightFormat.setFontUnderline(false);
 
     for (const Schedule& s : schedules)
     {
         QDate sDate = s.getStartTime().date();
         QDate eDate = s.getEndTime().date();
 
-        for (QDate d = sDate; d <= eDate; d = d.addDays(1))
+        for (QDate d = sDate; d <= eDate; d = d.addDays(1)) {
             ui->calendarWidget->setDateTextFormat(d, highlightFormat);
+        }
     }
-
 }
 
 // slots

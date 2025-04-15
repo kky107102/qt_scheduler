@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     calenderWidget* calWidget = new calenderWidget(this);
     setCentralWidget(calWidget);
 
+    this->setStyleSheet("background-color: #FDFAF6;");
     //a->show();
     calWidget->show();
 }
