@@ -11,6 +11,7 @@ calenderWidget::calenderWidget(QWidget *parent)
     paintSchedules();
 
     connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &calenderWidget::onClickedDate);
+    connect(ui->searchBtn, &QPushButton::clicked, this, &calenderWidget::onClickedSearchBtn);
 }
 
 calenderWidget::~calenderWidget()
@@ -20,6 +21,7 @@ calenderWidget::~calenderWidget()
 
 bool calenderWidget::getSchedules()
 {
+    schedules.clear();
     int year = ui->calendarWidget->yearShown();
     int month = ui->calendarWidget->monthShown();
     QDate firstDate(year, month, 1);
@@ -37,8 +39,12 @@ bool calenderWidget::getSchedules()
         return false;
     }
 
+    qDebug() << "[DEBUG] schedules: ";
     for (const Schedule& s : sList)
+    {
         schedules.append(s);
+        qDebug() << schedules.back().getScheduleName();
+    }
 
     return true;
 }
@@ -52,8 +58,9 @@ void calenderWidget::paintSchedules()
 
     QTextCharFormat defaultFormat;
     defaultFormat.setBackground(Qt::white);
-    for (QDate d = firstDate; d <= lastDate; d = d.addDays(1))
-        ui->calendarWidget->setDateTextFormat(d, defaultFormat);
+    for (QDate d = firstDate; d <= lastDate; d = d.addDays(1)) {
+        ui->calendarWidget->setDateTextFormat(d, QTextCharFormat());
+    }
 
 
     QTextCharFormat highlightFormat;
@@ -80,4 +87,11 @@ void calenderWidget::onClickedDate(const QDate &date)
         getSchedules();
         paintSchedules();
     }
+}
+
+void calenderWidget::onClickedSearchBtn()
+{
+    qDebug() << "onClickedSearchBtn called";
+    searchdialog = new searchDialog(this);
+    searchdialog->exec();
 }
