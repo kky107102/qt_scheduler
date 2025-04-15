@@ -30,9 +30,6 @@ bool calenderWidget::getSchedules()
     QTime endOfDay(23, 59, 59);
     QDateTime endDateTime(lastDate, endOfDay);
 
-    qDebug() << "startDate: " << startDateTime.toString(Qt::ISODate);
-    qDebug() << "endDate:" << endDateTime.toString(Qt::ISODate);
-
     QList<Schedule> sList = dbManager::instance().searchSchedule(startDateTime, endDateTime);
 
     if (sList.isEmpty())
@@ -54,8 +51,19 @@ void calenderWidget::paintSchedules()
 {
     qDebug() << "paintSchedules() called";
 
+    int year = ui->calendarWidget->yearShown();
+    int month = ui->calendarWidget->monthShown();
+    QDate firstDate(year, month, 1);
+    QDate lastDate = firstDate.addMonths(1).addDays(-1);
+
+    QTextCharFormat defaultFormat;
+    defaultFormat.setBackground(Qt::white);
+    for (QDate d = firstDate; d <= lastDate; d = d.addDays(1))
+        ui->calendarWidget->setDateTextFormat(d, defaultFormat);
+
+
     QTextCharFormat highlightFormat;
-    highlightFormat.setBackground(Qt::blue);
+    highlightFormat.setBackground(Qt::green);
 
     for (const Schedule& s : schedules)
     {
@@ -73,5 +81,10 @@ void calenderWidget::onClickedDate(const QDate &date)
 {
     qDebug() << "onClickedDate called";
     scheduleDialog = new showScheduleDialog(date, this);
-    scheduleDialog->exec();
+    if (scheduleDialog->exec() == QDialog::Rejected)
+    {
+        qDebug() << "accepted!!!";
+        getSchedules();
+        paintSchedules();
+    }
 }

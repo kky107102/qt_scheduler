@@ -38,8 +38,6 @@ public slots:
     void scheduleInfo(scheduleListWidget*);
     void removeSchedule(scheduleListWidget*);
 
-    // yjseo
-    // yjseo
     void getScheduleList();
 signals:
     void add_signal();
