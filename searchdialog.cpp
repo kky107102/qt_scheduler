@@ -9,10 +9,14 @@ searchDialog::searchDialog(QWidget *parent)
 
     connect(ui->searchBtn, &QPushButton::clicked, this, &searchDialog::onClickedSearchBtn);
     connect(ui->chkBtn, &QPushButton::clicked, this, &QDialog::accept);
+    connect(ui->listWidget, &QListWidget::itemActivated, this, &searchDialog::onClickedListWidget);
 }
 
 searchDialog::~searchDialog()
 {
+    for (Schedule* s : schedules)
+        delete s;
+    schedules.clear();
     delete ui;
 }
 
@@ -20,6 +24,7 @@ searchDialog::~searchDialog()
 void searchDialog::onClickedSearchBtn()
 {
     ui->listWidget->clear();
+    schedules.clear();
 
     QString searchNm = ui->scheduleNmLineEdit->text();
     if (searchNm.isEmpty() || searchNm == "일정을 입력하세요.")
@@ -37,10 +42,30 @@ void searchDialog::onClickedSearchBtn()
     // listWidget에 추가
     for (const Schedule& s : slist)
     {
+        schedules.push_back(new Schedule(s));
         QString date = s.getStartTime().toString("yyyy-MM-dd hh:mm") + " ~ " + s.getEndTime().toString("yyyy-MM-dd hh:mm");
-        qDebug() << date;
-        ui->listWidget->addItem(date);
+        QListWidgetItem* item = new QListWidgetItem(date, ui->listWidget);
+        item->setData(Qt::UserRole, s.getScheduleId());
     }
 
     ui->listWidget->show();
+}
+
+void searchDialog::onClickedListWidget(QListWidgetItem* item)
+{
+    int id = item->data(Qt::UserRole).toInt();
+    qDebug() << "선택한 일정 ID:" << id;
+
+    for (Schedule* s : schedules)
+    {
+        if (s->getScheduleId() == id)
+        {
+            QDate date = s->getStartTime().date();
+            editScheduleDialog* infodialog = new editScheduleDialog("info", date, s, this);
+            connect(infodialog, &QDialog::finished, infodialog, &QObject::deleteLater);
+            infodialog->exec();
+
+            break;
+        }
+    }
 }

@@ -4,6 +4,9 @@
 #include <QDialog>
 #include <QDebug>
 #include <QMessageBox>
+#include <QVector>
+#include <QListWidgetItem>
+#include "editscheduledialog.h"
 #include "schedule.h"
 #include "dbmanager.h"
 
@@ -21,9 +24,11 @@ public:
 
 private:
     Ui::searchDialog *ui;
+    QVector<Schedule *> schedules;
 
-private slots:
+public slots:
     void onClickedSearchBtn();
+    void onClickedListWidget(QListWidgetItem* item);
 };
 
 #endif // SEARCHDIALOG_H
