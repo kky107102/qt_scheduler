@@ -18,6 +18,7 @@ public:
     Schedule();
     Schedule(const QString &name, const QDateTime &start, const QDateTime &end,
              const QString &location, const QString &memo);
+    Schedule(const Schedule& s);
     ~Schedule();
 
     // getter
