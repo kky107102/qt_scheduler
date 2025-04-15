@@ -198,7 +198,6 @@ QList<Schedule> dbManager::getSchedulesForDate(const QDateTime &date)
     {
         QDateTime sTime = query.value("start").toDateTime();
         QDateTime eTime = query.value("end").toDateTime();
-
         if (isDateInSchedule(date, sTime, eTime)) {
             Schedule s;
             s.setScheduleId(query.value("id").toInt());

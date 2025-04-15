@@ -38,19 +38,13 @@ bool calenderWidget::getSchedules()
     }
 
     for (const Schedule& s : sList)
-    {
         schedules.append(s);
-        qDebug() << s.getScheduleId() << " "
-                << " " << s.getStartTime() << " " << s.getEndTime();
-    }
 
     return true;
 }
 
 void calenderWidget::paintSchedules()
 {
-    qDebug() << "paintSchedules() called";
-
     int year = ui->calendarWidget->yearShown();
     int month = ui->calendarWidget->monthShown();
     QDate firstDate(year, month, 1);
@@ -83,7 +77,6 @@ void calenderWidget::onClickedDate(const QDate &date)
     scheduleDialog = new showScheduleDialog(date, this);
     if (scheduleDialog->exec() == QDialog::Rejected)
     {
-        qDebug() << "accepted!!!";
         getSchedules();
         paintSchedules();
     }

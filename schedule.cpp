@@ -1,28 +1,5 @@
 #include "schedule.h"
 
-/*
-    Schedule();
-    Schedule(const QString &name, const QDateTime &start, const QDateTime &end,
-             const QString &location, const QString &memo);
-    ~Schedule();
-
-    // getter
-    int getScheduleId() const;
-    QString getScheduleName() const;
-    QDateTime getStartTime() const;
-    QDateTime getEndTime() const;
-    QString getLocation() const;
-    QString getMemo() const;
-
-    // setter
-    void setScheduleId(const int&);
-    void setScheduleName(const QString& name);
-    void setStartTime(const QDateTime& start);
-    void setEndTime(const QDateTime& end);
-    void setLocation(const QString& location);
-    void setMemo(const QString& memo);
-*/
-
 Schedule::Schedule() {}
 Schedule::Schedule(const QString &name, const QDateTime &start, const QDateTime &end,
                    const QString &location, const QString &memo)
