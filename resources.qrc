@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/down.ico</file>
+        <file>resource/next.ico</file>
+        <file>resource/prev.ico</file>
+        <file>resource/up.ico</file>
+        <file>resource/search.ico</file>
+        <file>resource/back_left_icon.ico</file>
+        <file>resource/calendar.ico</file>
+        <file>resource/next_right_icon.ico</file>
+    </qresource>
+</RCC>
