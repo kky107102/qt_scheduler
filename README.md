@@ -1,10 +1,13 @@
 # CalFix
-![calfix_logo](https://github.com/user-attachments/assets/5929cbdb-fc6c-4d89-aef3-40e310dec8d3)
-
 ## 1. 프로젝트 개요
 본 프로젝트는 사용자가 자신의 일정을 효율적으로 관리할 수 있도록 돕는 일정 관리 프로그램입니다.</br>
 기본적인 일정 등록, 수정 및 삭제 기능을 제공하며, 캘린더 위젯을 통해 한 눈에 일정을 확인할 수 있도록 설계되었습니다.
 
+## 2. 프로젝트 설계
+### UML
+![qt_scheduler_UML](https://github.com/user-attachments/assets/e3ed5c16-c697-412e-b992-36ce8d72dba3)
+### ERD
+![image](https://github.com/user-attachments/assets/3c6c1440-cda8-44d3-a522-a453fe9d4879)
 ## 2. 설치 방법
 ### 프로그램 다운로드
 1. 이 저장소의 상단에서 Code 버튼을 클릭하고, Download ZIP을 선택합니다.</br>
