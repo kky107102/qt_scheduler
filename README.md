@@ -27,8 +27,10 @@ cd qt_scheduler
 ![image](https://github.com/user-attachments/assets/9ad7a46b-f25d-42ec-b257-2d7f59120187)
 ### 일정 검색
 ![image](https://github.com/user-attachments/assets/cc668b97-ba5a-4076-bae1-f666308100f7)
-### 일별 일정 조회, 일정 추가
-![image](https://github.com/user-attachments/assets/921002cd-9f80-4e34-97e1-1c988ed1d67c)
+### 일별 일정 조회
+![image](https://github.com/user-attachments/assets/4caa6fe5-3fed-4ba1-88d9-1bc6dead3a95)
+### 일정 추가
+![image](https://github.com/user-attachments/assets/d98249d8-f46f-4b35-a947-7f555ed52ee2)
 ### 일정 수정, 조회
 ![image](https://github.com/user-attachments/assets/2f705fe8-d695-4b9f-b3ce-b72ef7054125)
 
