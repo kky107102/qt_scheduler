@@ -91,15 +91,18 @@ void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
             dial->setWindowTitle("일정 수정");
             if (dial->exec() == QDialog::Accepted) {
                 int id = schedules[i]->getScheduleId();
+                // editDialog에서 수정한 일정에 현재 선택된 날짜가 포함되어 있다면
                 if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
+                    // 리스트 및 db 수정
                     listWidgets[i]->setTaskName(dial->getSchedule()->getScheduleName());
                     listWidgets[i]->setStartTime(dial->getSchedule()->getStartTime());
                     schedules[i] = dial->getSchedule();
                     schedules[i]->setScheduleId(id);
-                    // db에서 수정
                     dbManager::instance().modifySchedule(*schedules.at(i));
                 }
+                // editDialog에서 수정한 일정에 현재 선택된 날짜가 포함되어 있지 않다면
                 else {
+                    // 현재 날짜에서는 제거
                     ui->scheduleList->takeItem(ui->scheduleList->row(listItems[i]));
                     listItems.removeAt(i);
                     listWidgets.removeAt(i);
