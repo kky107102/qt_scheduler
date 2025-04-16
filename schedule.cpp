@@ -2,8 +2,8 @@
 
 Schedule::Schedule() {}
 Schedule::Schedule(const QString &name, const QDateTime &start, const QDateTime &end,
-                   const QString &location, const QString &memo)
-    : scheduleName(name), startTime(start), endTime(end), location(location), memo(memo) {}
+                   const QString &location, const QString &memo, const QString &period)
+    : scheduleName(name), startTime(start), endTime(end), location(location), memo(memo), repeatPeriod(period) {}
 Schedule::Schedule(const Schedule& s)
 {
     this->scheduleId = s.getScheduleId();
@@ -12,6 +12,7 @@ Schedule::Schedule(const Schedule& s)
     this->endTime = s.getEndTime();
     this->location = s.getLocation();
     this->memo = s.getMemo();
+    this->repeatPeriod = s.getPeriod();
 }
 
 Schedule::~Schedule() {}
@@ -47,6 +48,11 @@ QString Schedule::getMemo() const
     return memo;
 }
 
+QString Schedule::getPeriod() const
+{
+    return repeatPeriod;
+}
+
 // setter
 void Schedule::setScheduleId(const int& id)
 {
@@ -71,4 +77,8 @@ void Schedule::setLocation(const QString& location)
 void Schedule::setMemo(const QString& memo)
 {
     this->memo = memo;
+}
+void Schedule::setPeriod(const QString& period)
+{
+    this->repeatPeriod = period;
 }
