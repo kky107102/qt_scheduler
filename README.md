@@ -23,9 +23,14 @@ cd qt_scheduler
 3. Qt Creator에서 키트를 선택하고, 실행 ▶️ 버튼을 클릭하여 프로그램을 빌드 및 실행합니다.
 
 ## 3. 사용법
-### 일정 조회 및 검색
-
-### 일정 추가, 수정, 삭제
+### 캘린더
+![image](https://github.com/user-attachments/assets/9ad7a46b-f25d-42ec-b257-2d7f59120187)
+### 일정 검색
+![image](https://github.com/user-attachments/assets/cc668b97-ba5a-4076-bae1-f666308100f7)
+### 일별 일정 조회, 일정 추가
+![image](https://github.com/user-attachments/assets/921002cd-9f80-4e34-97e1-1c988ed1d67c)
+### 일정 수정, 조회
+![image](https://github.com/user-attachments/assets/2f705fe8-d695-4b9f-b3ce-b72ef7054125)
 
 ## 4. 기능
 - 📆 월별 일정 조회
