@@ -105,7 +105,10 @@ void calenderWidget::paintSchedules()
     {
         QList<QDate> activeDates = getEffectiveDates(s, startPaint, endPaint); // limit range
         for (const QDate& d : activeDates) {
-            ui->calendarWidget->setDateTextFormat(d, highlightFormat);
+            if (d > lastDate)
+                break;
+            if (d >= firstDate)
+                ui->calendarWidget->setDateTextFormat(d, highlightFormat);
         }
     }
 }
