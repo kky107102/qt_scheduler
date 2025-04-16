@@ -8,9 +8,12 @@ calenderWidget::calenderWidget(QWidget *parent)
 {
     ui->setupUi(this);    
     ui->calendarWidget->showToday();
-    QPixmap pixmap(":/resource/calfix_logo.png"); // 리소스 또는 경로 사용
+
+    // 로고 삽입
+    QPixmap pixmap(":/resource/calfix_logo.png");
     ui->logoLabel->setPixmap(pixmap);
     ui->logoLabel->setScaledContents(true);
+
     getSchedules();
     paintSchedules();
 
