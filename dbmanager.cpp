@@ -77,11 +77,12 @@ bool dbManager::createScheduleTable()
                   "start DATETIME, "
                   "end DATETIME, "
                   "location VARCHAR(100), "
-                  "memo VARCHAR(200))");
+                  "memo VARCHAR(200), "
+                  "period VARCHAR(10))");
 
     if(!query.exec())
     {
-        qDebug() << "[ERROR] query.exec() failed";
+        qDebug() << "[ERROR] createtbl query.exec() failed";
         return false;
     }
 
@@ -94,15 +95,16 @@ int dbManager::insertSchedule(const Schedule& s)
 {
     QSqlQuery query(db);
     query.prepare("insert into scheduleTbl (name, start, end, location, memo) "
-                  "values (:name, :start, :end, :location, :memo)");
+                  "values (:name, :start, :end, :location, :memo, :period)");
     query.bindValue(":name", s.getScheduleName());
     query.bindValue(":start", s.getStartTime());
     query.bindValue(":end", s.getEndTime());
     query.bindValue(":location", s.getLocation());
     query.bindValue(":memo", s.getMemo());
+    query.bindValue(":period", s.getPeriod());
     if(!query.exec())
     {
-        qDebug() << "[ERROR] query.exec() failed";
+        qDebug() << "[ERROR] insert query.exec() failed";
         return -1; // fail
     }
 
@@ -120,7 +122,8 @@ bool dbManager::modifySchedule(const Schedule& s)
                   "start = :start, "
                   "end = :end, "
                   "location = :location, "
-                  "memo = :memo "
+                  "memo = :memo, "
+                  "period = :period "
                   "WHERE id = :id");
     query.bindValue(":name", s.getScheduleName());
     query.bindValue(":start", s.getStartTime());
@@ -128,6 +131,7 @@ bool dbManager::modifySchedule(const Schedule& s)
     query.bindValue(":location", s.getLocation());
     query.bindValue(":memo", s.getMemo());
     query.bindValue(":id", s.getScheduleId());
+    query.bindValue(":period", s.getPeriod());
 
     if (!query.exec()) {
         qDebug() << "[ERROR] Failed to modify schedule: " << query.lastError().text();
@@ -175,6 +179,7 @@ QList<Schedule> dbManager::searchSchedule(const QDateTime &start, const QDateTim
         s.setEndTime(query.value("end").toDateTime());
         s.setLocation(query.value("location").toString());
         s.setMemo(query.value("memo").toString());
+        s.setPeriod(query.value("period").toString());
 
         scheduleList.append(s);
     }
@@ -190,7 +195,7 @@ QList<Schedule> dbManager::getSchedulesForDate(const QDate& date)
     query.prepare("SELECT * FROM scheduleTbl");
     if (!query.exec())
     {
-        qDebug() << "[ERROR] failed to query.exec()";
+        qDebug() << "[ERROR] failed to getschedulesfordate query.exec()";
         return sList;
     }
 
@@ -206,6 +211,8 @@ QList<Schedule> dbManager::getSchedulesForDate(const QDate& date)
             s.setEndTime(query.value("end").toDateTime());
             s.setLocation(query.value("location").toString());
             s.setMemo(query.value("memo").toString());
+            s.setPeriod(query.value("period").toString());
+
             sList.append(s);
         }
     }
@@ -225,7 +232,7 @@ QList<Schedule> dbManager::searchScheduleName(const QString& name)
 
     if (!query.exec())
     {
-        qDebug() << "[ERROR] failed to query.exec()";
+        qDebug() << "[ERROR] failed to searchschedulename query.exec()";
         return sList;
     }
 
@@ -238,6 +245,7 @@ QList<Schedule> dbManager::searchScheduleName(const QString& name)
         s.setEndTime(query.value("end").toDateTime());
         s.setLocation(query.value("location").toString());
         s.setMemo(query.value("memo").toString());
+        s.setPeriod(query.value("period").toString());
 
         sList.append(s);
     }

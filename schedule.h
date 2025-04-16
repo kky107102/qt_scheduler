@@ -13,11 +13,12 @@ private:
     QDateTime endTime;
     QString location;
     QString memo;
+    QString repeatPeriod;
 
 public:
     Schedule();
     Schedule(const QString &name, const QDateTime &start, const QDateTime &end,
-             const QString &location, const QString &memo);
+             const QString &location, const QString &memo, const QString &period);
     Schedule(const Schedule& s);
     ~Schedule();
 
@@ -28,6 +29,7 @@ public:
     QDateTime getEndTime() const;
     QString getLocation() const;
     QString getMemo() const;
+    QString getPeriod() const;
 
     // setter
     void setScheduleId(const int&);
@@ -36,6 +38,7 @@ public:
     void setEndTime(const QDateTime& end);
     void setLocation(const QString& location);
     void setMemo(const QString& memo);
+    void setPeriod(const QString& period);
 };
 
 #endif // SCHEDULE_H
