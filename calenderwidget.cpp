@@ -77,10 +77,58 @@ void calenderWidget::paintSchedules()
         QDate sDate = s.getStartTime().date();
         QDate eDate = s.getEndTime().date();
 
+        QList<QDate> activeDates = getEffectiveDates(s, firstDate, lastDate);
+
+        for (const Schedule& s : schedules)
+        {
+            QList<QDate> activeDates = getEffectiveDates(s, firstDate, lastDate);
+            for (const QDate& d : activeDates) {
+                ui->calendarWidget->setDateTextFormat(d, highlightFormat);
+            }
+        }
+
+        /*
         for (QDate d = sDate; d <= eDate; d = d.addDays(1)) {
             ui->calendarWidget->setDateTextFormat(d, highlightFormat);
         }
+        */
     }
+}
+
+QList<QDate> calenderWidget::getEffectiveDates(const Schedule& s, const QDate& firstDate, const QDate& lastDate)
+{
+    QList<QDate> result;
+    QDate sDate = s.getStartTime().date();
+    QDate eDate = s.getEndTime().date();
+    QString type = s.getPeriod();
+
+    if (type == "반복 안 함")
+    {
+        for (QDate d = sDate; d <= eDate; d = d.addDays(1)) {
+            if (d >= firstDate && d <= lastDate)
+            {
+                result.append(d);
+            }
+        }
+    } else
+    {
+        QDate d = sDate;
+        while (d <= lastDate) {
+            if (d >= firstDate)
+                result.append(d);
+
+            if (type == "1주 마다")
+            {
+                d = d.addDays(7);
+            }
+            else if (type == "1개월 마다")
+            {
+                d = d.addMonths(1);
+            }
+        }
+    }
+
+    return result;
 }
 
 // slots
