@@ -72,7 +72,7 @@ void searchDialog::onClickedListWidget(QListWidgetItem* item)
 
     for (Schedule* s : schedules)
     {
-        if (s->getScheduleId() == id)
+        if (s->getScheduleId() == id) // 선택한 일정이면 조회할 수 있도록 조회 창 띄우기
         {
             QDate date = s->getStartTime().date();
             editScheduleDialog* infodialog = new editScheduleDialog("info", date, s, this);

@@ -246,11 +246,11 @@ QList<Schedule> dbManager::getSchedulesForDate(const QDate& date)
         QDate eTime = s.getEndTime().date();
         QString period = s.getPeriod();
 
-        if (isDateInSchedule(date, sTime, eTime))
+        if (isDateInSchedule(date, sTime, eTime)) // 현재 날짜에 일정이 있는 경우
         {
             sList.append(s);
         }
-        else if (isDateInRepeatedSchedule(date, sTime, eTime, period))
+        else if (isDateInRepeatedSchedule(date, sTime, eTime, period)) // 현재 날짜가 반복되는 일정 중 하나인 경우
         {
             sList.append(s);
         }

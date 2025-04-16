@@ -27,8 +27,8 @@ private:
     QVector<Schedule *> schedules;
 
 public slots:
-    void onClickedSearchBtn();
-    void onClickedListWidget(QListWidgetItem* item);
+    void onClickedSearchBtn(); // 검색 버튼 처리 함수
+    void onClickedListWidget(QListWidgetItem* item); // 검색된 일정 리스트 클릭 처리 함수
 };
 
 #endif // SEARCHDIALOG_H
