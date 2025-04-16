@@ -117,7 +117,6 @@ void editScheduleDialog::onOkClicked()
     else{
         saveScheduledata();
         accept();
-        qDebug() << "accepted";
     }
 }
 
