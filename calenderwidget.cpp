@@ -105,7 +105,10 @@ void calenderWidget::paintSchedules()
     {
         QList<QDate> activeDates = getEffectiveDates(s, startPaint, endPaint); // limit range
         for (const QDate& d : activeDates) {
-            ui->calendarWidget->setDateTextFormat(d, highlightFormat);
+            if (d > lastDate)
+                break;
+            if (d >= firstDate)
+                ui->calendarWidget->setDateTextFormat(d, highlightFormat);
         }
     }
 }
@@ -156,6 +159,7 @@ void calenderWidget::onClickedDate(const QDate &date)
 {
     qDebug() << "onClickedDate called";
     scheduleDialog = new showScheduleDialog(date);
+    scheduleDialog->setWindowTitle(date.toString("yyyy년 MM월 dd일"));
     if (scheduleDialog->exec() == QDialog::Rejected)
     {
         getSchedules();
@@ -167,6 +171,7 @@ void calenderWidget::onClickedSearchBtn()
 {
     qDebug() << "onClickedSearchBtn called";
     searchdialog = new searchDialog();
+    searchdialog->setWindowTitle("일정 검색");
     searchdialog->exec();
 }
 

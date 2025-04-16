@@ -16,5 +16,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.resize(600, 500);
     w.show();
+    a.setWindowIcon(QIcon(":/resource/calendar.ico"));
+    w.setWindowTitle("CalFix");
     return a.exec();
 }
