@@ -7,6 +7,20 @@ searchDialog::searchDialog(QWidget *parent)
 {
     ui->setupUi(this);
 
+    ui->searchBtn->setText("");
+    ui->searchBtn->setStyleSheet(
+        "QPushButton {"
+        "    background-color: rgb(153, 188, 133);"
+        "    border: 1px solid #ccc;"
+        "    border-radius: 5px;"
+        "    color: white;"
+        "    image: url(:/resource/search.ico);"
+        "}"
+        "QPushButton:hover {"
+        "    background-color: rgb(139, 171, 121);"
+        "}"
+        );
+
     connect(ui->searchBtn, &QPushButton::clicked, this, &searchDialog::onClickedSearchBtn);
     connect(ui->chkBtn, &QPushButton::clicked, this, &QDialog::accept);
     connect(ui->listWidget, &QListWidget::itemActivated, this, &searchDialog::onClickedListWidget);

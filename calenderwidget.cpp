@@ -11,9 +11,23 @@ calenderWidget::calenderWidget(QWidget *parent)
     paintSchedules();
 
     ui->calendarWidget->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
+    ui->searchBtn->setText("");
+    ui->searchBtn->setStyleSheet(
+        "QPushButton {"
+        "    background-color: rgb(153, 188, 133);"
+        "    border: 1px solid #ccc;"
+        "    border-radius: 5px;"
+        "    color: white;"
+        "    image: url(:/resource/search.ico);"
+        "}"
+        "QPushButton:hover {"
+        "    background-color: rgb(139, 171, 121);"
+        "}"
+        );
 
     connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &calenderWidget::onClickedDate);
     connect(ui->searchBtn, &QPushButton::clicked, this, &calenderWidget::onClickedSearchBtn);
+    connect(ui->calendarWidget, &QCalendarWidget::currentPageChanged, this, &calenderWidget::onMonthChanged);
 }
 
 calenderWidget::~calenderWidget()
@@ -55,43 +69,40 @@ void calenderWidget::paintSchedules()
 {
     int year = ui->calendarWidget->yearShown();
     int month = ui->calendarWidget->monthShown();
+
     QDate firstDate(year, month, 1);
     QDate lastDate = firstDate.addMonths(1).addDays(-1);
 
-    QTextCharFormat defaultFormat;
-    defaultFormat.setBackground(QColor("#E4EFE7"));
-    defaultFormat.setForeground(Qt::black);
-    defaultFormat.setFontWeight(QFont::Normal);
+    QTextCharFormat whiteFormat;
+    whiteFormat.setBackground(Qt::white);
+    whiteFormat.setForeground(Qt::black);
+    whiteFormat.setFontWeight(QFont::Normal);
+
+    QDate startPaint = firstDate.addDays(-14);
+    QDate endPaint = lastDate.addDays(14);
+
+    for (QDate d = startPaint; d <= endPaint; d = d.addDays(1)) {
+        ui->calendarWidget->setDateTextFormat(d, whiteFormat);
+    }
+
+    QTextCharFormat currentMonthFormat = whiteFormat;
+    currentMonthFormat.setBackground(QColor("#E4EFE7"));
+
     for (QDate d = firstDate; d <= lastDate; d = d.addDays(1)) {
-        ui->calendarWidget->setDateTextFormat(d, defaultFormat);
+        ui->calendarWidget->setDateTextFormat(d, currentMonthFormat);
     }
 
     QTextCharFormat highlightFormat;
-    highlightFormat.setBackground(QBrush(QColor("#B9D2AB")));
+    highlightFormat.setBackground(QColor("#B9D2AB"));
     highlightFormat.setForeground(Qt::white);
     highlightFormat.setFontWeight(QFont::Bold);
-    highlightFormat.setFontUnderline(false);
 
     for (const Schedule& s : schedules)
     {
-        QDate sDate = s.getStartTime().date();
-        QDate eDate = s.getEndTime().date();
-
-        QList<QDate> activeDates = getEffectiveDates(s, firstDate, lastDate);
-
-        for (const Schedule& s : schedules)
-        {
-            QList<QDate> activeDates = getEffectiveDates(s, firstDate, lastDate);
-            for (const QDate& d : activeDates) {
-                ui->calendarWidget->setDateTextFormat(d, highlightFormat);
-            }
-        }
-
-        /*
-        for (QDate d = sDate; d <= eDate; d = d.addDays(1)) {
+        QList<QDate> activeDates = getEffectiveDates(s, startPaint, endPaint); // limit range
+        for (const QDate& d : activeDates) {
             ui->calendarWidget->setDateTextFormat(d, highlightFormat);
         }
-        */
     }
 }
 
@@ -105,26 +116,31 @@ QList<QDate> calenderWidget::getEffectiveDates(const Schedule& s, const QDate& f
     if (type == "반복 안 함")
     {
         for (QDate d = sDate; d <= eDate; d = d.addDays(1)) {
-            if (d >= firstDate && d <= lastDate)
-            {
+            if (d >= firstDate && d <= lastDate) {
                 result.append(d);
             }
         }
-    } else
+    }
+    else
     {
-        QDate d = sDate;
-        while (d <= lastDate) {
-            if (d >= firstDate)
-                result.append(d);
+        QDate periodStart = sDate;
+        int duration = sDate.daysTo(eDate); // 일정의 길이 계산 (몇 일짜리 일정인지)
 
+        while (periodStart <= lastDate)
+        {
+            QDate periodEnd = periodStart.addDays(duration);
+
+            for (QDate d = periodStart; d <= periodEnd; d = d.addDays(1)) {
+                if (d >= firstDate && d <= lastDate) {
+                    result.append(d);
+                }
+            }
+
+            // 다음 반복 주기로 이동
             if (type == "1주 마다")
-            {
-                d = d.addDays(7);
-            }
+                periodStart = periodStart.addDays(7);
             else if (type == "1개월 마다")
-            {
-                d = d.addMonths(1);
-            }
+                periodStart = periodStart.addMonths(1);
         }
     }
 
@@ -148,4 +164,10 @@ void calenderWidget::onClickedSearchBtn()
     qDebug() << "onClickedSearchBtn called";
     searchdialog = new searchDialog(this);
     searchdialog->exec();
+}
+
+void calenderWidget::onMonthChanged()
+{
+    getSchedules();
+    paintSchedules();
 }

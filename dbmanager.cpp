@@ -191,7 +191,8 @@ QList<Schedule> dbManager::searchSchedule(const QDateTime &start, const QDateTim
     QList<Schedule> scheduleList;
 
     QSqlQuery query(db);
-    query.prepare("SELECT * FROM scheduleTbl WHERE start >= :start AND end <= :end");
+    //query.prepare("SELECT * FROM scheduleTbl WHERE start >= :start AND end <= :end");
+    query.prepare("SELECT * FROM scheduleTbl");
     query.bindValue(":start", start);
     query.bindValue(":end", end);
 
