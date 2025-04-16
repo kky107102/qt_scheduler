@@ -9,12 +9,10 @@ calenderWidget::calenderWidget(QWidget *parent)
     ui->setupUi(this);    
     ui->calendarWidget->showToday();
 
-    // 왼쪽 상단 로고 추가
     QPixmap pixmap(":/resource/calfix_logo.png");
     ui->logoLabel->setPixmap(pixmap);
     ui->logoLabel->setScaledContents(true);
 
-    // 캘린더에 일정 추가
     getSchedules();
     paintSchedules();
 
