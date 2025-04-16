@@ -1,7 +1,7 @@
 #include "showscheduledialog.h"
 #include "ui_showscheduledialog.h"
 
-showScheduleDialog::showScheduleDialog(QDate date, QWidget *parent)
+showScheduleDialog::showScheduleDialog(const QDate& date, QWidget *parent)
     : date(date), QDialog(parent)
     , ui(new Ui::showScheduleDialog)
 {
@@ -44,7 +44,7 @@ void showScheduleDialog::showSchedule(){
     }
 }
 
-QDate showScheduleDialog::getDate(){
+QDate showScheduleDialog::getDate() const{
     return this->date;
 }
 
@@ -60,38 +60,13 @@ void showScheduleDialog::newSchedule(){
     dial = new editScheduleDialog("add", this->getDate()); // label로 상단 제목 전달 (추가, 수정, 보기)
     if (dial->exec() == QDialog::Accepted) {
         schedules.push_back(dial->getSchedule());
-
         // db에 삽입
         dbManager::instance().insertSchedule(*schedules.back());
         emit add_signal();
-
-
-        /*
-        if (dial->getSchedule()->getPeriod() == "반복 안 함"){
-            if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
-                schedules.push_back(dial->getSchedule());
-                // db에 삽입
-                dbManager::instance().insertSchedule(*schedules.back());
-                emit add_signal();
-            }
-            else {
-                dbManager::instance().insertSchedule(*(dial->getSchedule()));
-            }
-        }
-        else if (dial->getSchedule()->getPeriod() == "1주 마다"){
-            for (int week = 0; week < 52; week++){
-
-            }
-        }
-        else if (dial->getSchedule()->getPeriod() == "1개월 마다"){
-
-        }
-        */
     }
 }
 
 void showScheduleDialog::addSchedule(){
-
         auto* item = new QListWidgetItem(ui->scheduleList);
         auto* widget = new scheduleListWidget(schedules.back()->getStartTime(), schedules.back()->getScheduleName(), ui->scheduleList);
 
@@ -104,7 +79,6 @@ void showScheduleDialog::addSchedule(){
 
         listItems.push_back(item);
         listWidgets.push_back(widget);
-
 }
 
 void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
