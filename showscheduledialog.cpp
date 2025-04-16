@@ -10,7 +10,9 @@ showScheduleDialog::showScheduleDialog(QDate date, QWidget *parent)
 
     connect(ui->addScheduleBtn, &QPushButton::clicked, this, &showScheduleDialog::newSchedule);
     connect(this, &showScheduleDialog::add_signal, this, &showScheduleDialog::addSchedule);
+
     connect(ui->scheduleList, &QListWidget::itemClicked, this, &showScheduleDialog::editSchedule);
+
     getScheduleList();
     showSchedule();
 }
@@ -36,7 +38,7 @@ void showScheduleDialog::showSchedule(){
         connect(listWidgets[i], &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
         connect(listWidgets[i], &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
 
-        listItems[i]->setSizeHint(listWidgets[i]->sizeHint());
+        listItems[i]->setSizeHint(QSize(370,30));
         ui->scheduleList->addItem(listItems[i]);
         ui->scheduleList->setItemWidget(listItems[i], listWidgets[i]);
     }
@@ -46,18 +48,38 @@ QDate showScheduleDialog::getDate(){
     return this->date;
 }
 
+// void showScheduleDialog::addRepeat(QString period){
+//     QDate firstDate = dial->getSchedule()->getStartTime().date();
+//     for (int week = 0; week < 52; week++){
+//         dial->getSchedule()->setStartTime(firstDate.addMonths(week));
+//         dbManager::instance().insertSchedule(*(dial->getSchedule()));
+//     }
+// }
+
 void showScheduleDialog::newSchedule(){
     dial = new editScheduleDialog("add", this->getDate()); // label로 상단 제목 전달 (추가, 수정, 보기)
     if (dial->exec() == QDialog::Accepted) {
-        qDebug() << "클릭날짜" << this->getDate();
-        if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
-            schedules.push_back(dial->getSchedule());
-            // db에 삽입
-            dbManager::instance().insertSchedule(*schedules.back());
-            emit add_signal();
+        if (dial->getSchedule()->getPeriod() == "반복 안 함"){
+            if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
+                schedules.push_back(dial->getSchedule());
+                // db에 삽입
+                dbManager::instance().insertSchedule(*schedules.back());
+                emit add_signal();
+            }
+            else {
+                dbManager::instance().insertSchedule(*(dial->getSchedule()));
+            }
         }
-        else {
-            dbManager::instance().insertSchedule(*(dial->getSchedule()));
+        else if (dial->getSchedule()->getPeriod() == "1주 마다"){
+
+            for (int week = 0; week < 52; week++){
+
+            }
+        }
+        else if (dial->getSchedule()->getPeriod() == "1개월 마다"){
+            for (int month = 0; month < 12; month++){
+
+            }
         }
     }
 }
@@ -70,7 +92,7 @@ void showScheduleDialog::addSchedule(){
         connect(widget, &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
         connect(widget, &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
 
-        item->setSizeHint(widget->sizeHint());
+        item->setSizeHint(QSize(370,30));
         ui->scheduleList->addItem(item);
         ui->scheduleList->setItemWidget(item, widget);
 
@@ -86,7 +108,6 @@ void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
             if (dial->exec() == QDialog::Accepted) {
                 int id = schedules[i]->getScheduleId();
                 if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
-                    //listItems[i] = targetItem;
                     listWidgets[i]->setTaskName(dial->getSchedule()->getScheduleName());
                     listWidgets[i]->setStartTime(dial->getSchedule()->getStartTime());
                     schedules[i] = dial->getSchedule();
