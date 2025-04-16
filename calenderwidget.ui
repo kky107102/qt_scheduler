@@ -109,7 +109,7 @@
     font-size: 13px;
     margin: 5px 0;
     border-radius: 5px;
-    pading: 0px 2px;
+    padding: 0px 2px;
     background-color: #E4EFE7
 }
 
@@ -173,7 +173,7 @@
 #calendarWidget QToolButton::menu-indicator {
     /* remove the toolButton arrowa */
     /* image: none */
-    nosubcontrol-orign: margin;
+    subcontrol-origin: margin;
     subcontrol-position: right center;
     margin-top: 10px;
     width: 20px;
@@ -187,14 +187,14 @@
 
     border: 2px solid #99BC85;
     border-top: 0px;
-    border-bottom-left-radious: 5px;
+    border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     background-color: #fff;
 }
 
 #qt_calendar_calendarview::item:hover {
     
-    background-color: #E4EFE7;
+    background-color: #99BC85;
 }
 
 #qt_calendar_calendarview::item:selected {

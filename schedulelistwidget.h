@@ -14,9 +14,9 @@ class scheduleListWidget : public QWidget
 public:
     explicit scheduleListWidget(QDateTime startTime, QString task, QWidget *parent = nullptr);
     ~scheduleListWidget();
-    QString getTaskName();
-    void setTaskName(QString);
-    void setStartTime(QDateTime);
+    QString getTaskName() const;
+    void setTaskName(const QString&);
+    void setStartTime(const QDateTime&);
 public slots:
     void slot_del();
     void slot_show();

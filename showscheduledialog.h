@@ -24,9 +24,9 @@ class showScheduleDialog : public QDialog
     QVector<Schedule*> schedules;
 
 public:
-    explicit showScheduleDialog(QDate date, QWidget *parent);
+    explicit showScheduleDialog(const QDate& date, QWidget *parent);
     ~showScheduleDialog();
-    QDate getDate();
+    QDate getDate() const;
     void addRepeat(QString);
 
 private:

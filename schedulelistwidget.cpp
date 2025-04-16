@@ -27,13 +27,13 @@ void scheduleListWidget::slot_show() {
     emit showclicked(this);
 }
 
-QString scheduleListWidget::getTaskName(){
+QString scheduleListWidget::getTaskName() const{
     return ui->taskName->text();
 }
 
-void scheduleListWidget::setTaskName(QString name){
+void scheduleListWidget::setTaskName(const QString& name){
     ui->taskName->setText(name);
 }
-void scheduleListWidget::setStartTime(QDateTime time){
+void scheduleListWidget::setStartTime(const QDateTime& time){
     ui->taskTime->setText(time.toString("hh:mm"));
 }

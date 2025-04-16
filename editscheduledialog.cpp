@@ -1,7 +1,7 @@
 #include "editscheduledialog.h"
 #include "ui_editscheduledialog.h"
 
-editScheduleDialog::editScheduleDialog(QString mod, QDate date, Schedule *s, QWidget *parent)
+editScheduleDialog::editScheduleDialog(const QString& mod, const QDate& date, Schedule *s, QWidget *parent)
     : date(date), QDialog(parent)
     , ui(new Ui::editScheduleDialog)
 {
@@ -20,6 +20,13 @@ editScheduleDialog::editScheduleDialog(QString mod, QDate date, Schedule *s, QWi
         ui->taskNmLineEdit->setText(s->getScheduleName());
         ui->startDateTimeEdit->setDateTime(s->getStartTime());
         ui->endDateTimeEdit->setDateTime(s->getEndTime());
+        if (s->getPeriod() == "반복 안 함"){
+            ui->repeat_check->setChecked(false);
+        }
+        else{
+            ui->repeat_check->setChecked(true);
+            ui->repeat_combo->setEnabled(true);
+        }
         ui->repeat_combo->setCurrentText(s->getPeriod());
         ui->locationLineEdit->setText(s->getLocation());
         ui->memoTextEdit->setText(s->getMemo());
@@ -29,7 +36,6 @@ editScheduleDialog::editScheduleDialog(QString mod, QDate date, Schedule *s, QWi
         ui->taskNmLineEdit->setText(s->getScheduleName());
         ui->startDateTimeEdit->setDateTime(s->getStartTime());
         ui->endDateTimeEdit->setDateTime(s->getEndTime());
-        ui->repeat_check->setEnabled(false);
         ui->repeat_combo->setCurrentText(s->getPeriod());
         ui->locationLineEdit->setText(s->getLocation());
         ui->memoTextEdit->setText(s->getMemo());
@@ -37,6 +43,7 @@ editScheduleDialog::editScheduleDialog(QString mod, QDate date, Schedule *s, QWi
         ui->taskNmLineEdit->setReadOnly(true);
         ui->startDateTimeEdit->setReadOnly(true);
         ui->endDateTimeEdit->setReadOnly(true);
+        ui->repeat_check->setEnabled(false);
         ui->locationLineEdit->setReadOnly(true);
         ui->memoTextEdit->setReadOnly(true);
     }
@@ -51,6 +58,7 @@ editScheduleDialog::~editScheduleDialog()
 
 void editScheduleDialog::onChecked(Qt::CheckState state){
     if (state == Qt::Unchecked){
+        ui->repeat_combo->setCurrentText("반복 안 함");
         ui->repeat_combo->setEnabled(false);
     }
     else if (state == Qt::Checked){
