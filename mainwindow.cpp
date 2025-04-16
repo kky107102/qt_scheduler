@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     //showScheduleDialog* a = new showScheduleDialog(QDate::currentDate(),this);
-    calenderWidget* calWidget = new calenderWidget(this);
+    calenderWidget* calWidget = new calenderWidget();
     setCentralWidget(calWidget);
 
     this->setStyleSheet("background-color: #FDFAF6;");

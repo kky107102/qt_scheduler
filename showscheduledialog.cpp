@@ -38,7 +38,7 @@ void showScheduleDialog::showSchedule(){
         connect(listWidgets[i], &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
         connect(listWidgets[i], &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
 
-        listItems[i]->setSizeHint(QSize(370,30));
+        listItems[i]->setSizeHint(QSize(370,40));
         ui->scheduleList->addItem(listItems[i]);
         ui->scheduleList->setItemWidget(listItems[i], listWidgets[i]);
     }
@@ -71,7 +71,7 @@ void showScheduleDialog::addSchedule(){
         connect(widget, &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
         connect(widget, &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
 
-        item->setSizeHint(QSize(370,30));
+        item->setSizeHint(QSize(370,40));
         ui->scheduleList->addItem(item);
         ui->scheduleList->setItemWidget(item, widget);
 
@@ -82,7 +82,7 @@ void showScheduleDialog::addSchedule(){
 void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
     for (int i = 0; i < listItems.size(); ++i) {
         if (listItems[i] == targetItem){
-            dial = new editScheduleDialog("edit", this->getDate(), schedules[i]);
+            dial = new editScheduleDialog("edit", this->getDate(), schedules[i], this);
             if (dial->exec() == QDialog::Accepted) {
                 int id = schedules[i]->getScheduleId();
                 if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){

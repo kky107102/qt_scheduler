@@ -19,7 +19,6 @@ class editScheduleDialog : public QDialog
     Schedule* s;
     QDate date;
     QString mod;
-    int currentid;
 
 public:
     explicit editScheduleDialog(const QString& mod, const QDate& date, Schedule *s = nullptr, QWidget *parent = nullptr);

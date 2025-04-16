@@ -1,12 +1,16 @@
 #include "calenderwidget.h"
 #include "ui_calenderwidget.h"
+#include <QFontDatabase>
 
 calenderWidget::calenderWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::calenderWidget)
 {
-    ui->setupUi(this);
+    ui->setupUi(this);    
     ui->calendarWidget->showToday();
+    QPixmap pixmap(":/resource/calfix_logo.png"); // 리소스 또는 경로 사용
+    ui->logoLabel->setPixmap(pixmap);
+    ui->logoLabel->setScaledContents(true);
     getSchedules();
     paintSchedules();
 
@@ -151,7 +155,7 @@ QList<QDate> calenderWidget::getEffectiveDates(const Schedule& s, const QDate& f
 void calenderWidget::onClickedDate(const QDate &date)
 {
     qDebug() << "onClickedDate called";
-    scheduleDialog = new showScheduleDialog(date, this);
+    scheduleDialog = new showScheduleDialog(date);
     if (scheduleDialog->exec() == QDialog::Rejected)
     {
         getSchedules();
@@ -162,7 +166,7 @@ void calenderWidget::onClickedDate(const QDate &date)
 void calenderWidget::onClickedSearchBtn()
 {
     qDebug() << "onClickedSearchBtn called";
-    searchdialog = new searchDialog(this);
+    searchdialog = new searchDialog();
     searchdialog->exec();
 }
 

@@ -8,5 +8,10 @@
         <file>resource/back_left_icon.ico</file>
         <file>resource/calendar.ico</file>
         <file>resource/next_right_icon.ico</file>
+        <file>resource/calfix_logo.png</file>
+        <file>resource/NanumJungHagSaeng.ttf</file>
+        <file>resource/NanumAmSeuTeReuDam.ttf</file>
+        <file>resource/NanumBaegEuiEuiCeonSa.ttf</file>
+        <file>resource/NanumBuJangNimNunCiCe.ttf</file>
     </qresource>
 </RCC>
