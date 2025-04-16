@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>565</width>
-    <height>469</height>
+    <width>583</width>
+    <height>457</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -126,8 +126,8 @@
 /* Style for year input LineEdit */
 #qt_calendar_yearedit {
     min-width: 53px;
-    color: #E4EFE7;
-    background: #E4EFE7;
+    color: #fff;
+    background: #fff;
     font-size: 13px;
 }
 
@@ -158,12 +158,12 @@
 
 /* style for month select menu */
 #calendarWidget QToolButton QMenu {
-    background-color: #E4EFE7
+    background-color: #fff
 }
 
 #calendarWidget QToolButton QMenu::item {
     /* padding: 5px */
-    background-color: #E4EFE7
+    background-color: #fff
 }
 
 #calendarWidget QToolButton QMenu::item:selected:enabled {
@@ -208,7 +208,7 @@
   <widget class="QPushButton" name="searchBtn">
    <property name="geometry">
     <rect>
-     <x>490</x>
+     <x>520</x>
      <y>10</y>
      <width>51</width>
      <height>24</height>
@@ -220,7 +220,7 @@ background-color: rgb(153, 188, 133);
 border: 1px solid #ccc;
 border-radius: 5px;
 color: white;
-image: url(:/resources/search.ico);
+image: url(qrc:/resource/search.ico);
 }
 QPushButton:hover {
 background-color: rgb(139, 171, 121);

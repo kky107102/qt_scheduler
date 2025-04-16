@@ -33,6 +33,7 @@ private:
 private slots:
     void onClickedDate(const QDate &date); // eidtscheduledialog 호출
     void onClickedSearchBtn();
+    void onMonthChanged();
 };
 
 #endif // CALENDERWIDGET_H
