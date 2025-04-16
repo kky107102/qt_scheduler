@@ -48,21 +48,19 @@ QDate showScheduleDialog::getDate() const{
     return this->date;
 }
 
-// void showScheduleDialog::addRepeat(QString period){
-//     QDate firstDate = dial->getSchedule()->getStartTime().date();
-//     for (int week = 0; week < 52; week++){
-//         dial->getSchedule()->setStartTime(firstDate.addMonths(week));
-//         dbManager::instance().insertSchedule(*(dial->getSchedule()));
-//     }
-// }
-
 void showScheduleDialog::newSchedule(){
     dial = new editScheduleDialog("add", this->getDate()); // label로 상단 제목 전달 (추가, 수정, 보기)
     if (dial->exec() == QDialog::Accepted) {
-        schedules.push_back(dial->getSchedule());
-        // db에 삽입
-        dbManager::instance().insertSchedule(*schedules.back());
-        emit add_signal();
+        // editDialog에서 추가한 일정에 현재 선택된 날짜가 포함되어 있다면 리스트에 add
+        if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
+            schedules.push_back(dial->getSchedule());
+            // db에 삽입
+            dbManager::instance().insertSchedule(*schedules.back());
+            emit add_signal();
+        }
+        else {
+            dbManager::instance().insertSchedule(*(dial->getSchedule()));
+        }
     }
 }
 
