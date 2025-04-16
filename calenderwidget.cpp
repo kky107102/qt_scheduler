@@ -9,7 +9,6 @@ calenderWidget::calenderWidget(QWidget *parent)
     ui->setupUi(this);    
     ui->calendarWidget->showToday();
 
-    // 로고 삽입
     QPixmap pixmap(":/resource/calfix_logo.png");
     ui->logoLabel->setPixmap(pixmap);
     ui->logoLabel->setScaledContents(true);
@@ -17,7 +16,10 @@ calenderWidget::calenderWidget(QWidget *parent)
     getSchedules();
     paintSchedules();
 
+    // 캘린더 vertical header 포맷 삭제
     ui->calendarWidget->setVerticalHeaderFormat(QCalendarWidget::NoVerticalHeader);
+
+    // 검색 버튼 아이콘 설정
     ui->searchBtn->setText("");
     ui->searchBtn->setStyleSheet(
         "QPushButton {"
@@ -32,9 +34,10 @@ calenderWidget::calenderWidget(QWidget *parent)
         "}"
         );
 
-    connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &calenderWidget::onClickedDate);
-    connect(ui->searchBtn, &QPushButton::clicked, this, &calenderWidget::onClickedSearchBtn);
-    connect(ui->calendarWidget, &QCalendarWidget::currentPageChanged, this, &calenderWidget::onMonthChanged);
+    // connect 함수
+    connect(ui->calendarWidget, &QCalendarWidget::clicked, this, &calenderWidget::onClickedDate); // 선택된 날짜 일정 조회
+    connect(ui->searchBtn, &QPushButton::clicked, this, &calenderWidget::onClickedSearchBtn); // 검색 버튼 클릭
+    connect(ui->calendarWidget, &QCalendarWidget::currentPageChanged, this, &calenderWidget::onMonthChanged); // 다른 달 출력
 }
 
 calenderWidget::~calenderWidget()
@@ -45,16 +48,18 @@ calenderWidget::~calenderWidget()
 bool calenderWidget::getSchedules()
 {
     schedules.clear();
+
+    // 현재 선택된 달의 처음 시간, 끝 시간 가져오기
     int year = ui->calendarWidget->yearShown();
     int month = ui->calendarWidget->monthShown();
     QDate firstDate(year, month, 1);
     QTime startOfDay(0, 0, 0);
     QDateTime startDateTime(firstDate, startOfDay);
-
     QDate lastDate = firstDate.addMonths(1).addDays(-1);
     QTime endOfDay(23, 59, 59);
     QDateTime endDateTime(lastDate, endOfDay);
 
+    // 모든 일정 리스트 조회
     QList<Schedule> sList = dbManager::instance().searchSchedule(startDateTime, endDateTime);
 
     if (sList.isEmpty())
@@ -62,6 +67,7 @@ bool calenderWidget::getSchedules()
         return false;
     }
 
+    // 일정 리스트를 schedules 벡터에 추가
     qDebug() << "[DEBUG] schedules: ";
     for (const Schedule& s : sList)
     {
@@ -88,6 +94,7 @@ void calenderWidget::paintSchedules()
     QDate startPaint = firstDate.addDays(-14);
     QDate endPaint = lastDate.addDays(14);
 
+    // 캘린더 날짜 배경 초기화
     for (QDate d = startPaint; d <= endPaint; d = d.addDays(1)) {
         ui->calendarWidget->setDateTextFormat(d, whiteFormat);
     }
@@ -99,6 +106,7 @@ void calenderWidget::paintSchedules()
         ui->calendarWidget->setDateTextFormat(d, currentMonthFormat);
     }
 
+    // 캘린더에 일정 표시
     QTextCharFormat highlightFormat;
     highlightFormat.setBackground(QColor("#B9D2AB"));
     highlightFormat.setForeground(Qt::white);
