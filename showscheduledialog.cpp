@@ -34,6 +34,7 @@ void showScheduleDialog::showSchedule(){
         return;
     }
 
+    // 일별 일정 리스트에 Item 채우기
     for (int i = 0; i < listItems.size(); i++){
         connect(listWidgets[i], &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
         connect(listWidgets[i], &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
@@ -51,32 +52,35 @@ QDate showScheduleDialog::getDate() const{
 void showScheduleDialog::newSchedule(){
     dial = new editScheduleDialog("add", this->getDate()); // label로 상단 제목 전달 (추가, 수정, 보기)
     if (dial->exec() == QDialog::Accepted) {
-        // editDialog에서 추가한 일정에 현재 선택된 날짜가 포함되어 있다면 리스트에 add
+        // editDialog에서 추가한 일정에 현재 선택된 날짜가 포함되어 있다면
         if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
+            // 일별 일정 리스트와 db에 추가
             schedules.push_back(dial->getSchedule());
-            // db에 삽입
             dbManager::instance().insertSchedule(*schedules.back());
             emit add_signal();
         }
+        // editDialog에서 추가한 일정에 현재 선택된 날짜가 포함되어 있지 않다면
         else {
+            // db에만 추가
             dbManager::instance().insertSchedule(*(dial->getSchedule()));
         }
     }
 }
 
 void showScheduleDialog::addSchedule(){
-        auto* item = new QListWidgetItem(ui->scheduleList);
-        auto* widget = new scheduleListWidget(schedules.back()->getStartTime(), schedules.back()->getScheduleName(), ui->scheduleList);
+    // 새로 추가된 일정을 리스트에 추가
+    auto* item = new QListWidgetItem(ui->scheduleList);
+    auto* widget = new scheduleListWidget(schedules.back()->getStartTime(), schedules.back()->getScheduleName(), ui->scheduleList);
 
-        connect(widget, &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
-        connect(widget, &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
+    connect(widget, &scheduleListWidget::delclicked, this, &showScheduleDialog::removeSchedule);
+    connect(widget, &scheduleListWidget::showclicked, this, &showScheduleDialog::scheduleInfo);
 
-        item->setSizeHint(QSize(370,40));
-        ui->scheduleList->addItem(item);
-        ui->scheduleList->setItemWidget(item, widget);
+    item->setSizeHint(QSize(370,40));
+    ui->scheduleList->addItem(item);
+    ui->scheduleList->setItemWidget(item, widget);
 
-        listItems.push_back(item);
-        listWidgets.push_back(widget);
+    listItems.push_back(item);
+    listWidgets.push_back(widget);
 }
 
 void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){

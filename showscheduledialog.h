@@ -21,6 +21,7 @@ class showScheduleDialog : public QDialog
     editScheduleDialog* dial;
     QVector<QListWidgetItem*> listItems;
     QVector<scheduleListWidget*> listWidgets;
+    // 일별 리스트를 관리하는 벡터
     QVector<Schedule*> schedules;
 
 public:
