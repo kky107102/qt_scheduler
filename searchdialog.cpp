@@ -77,6 +77,7 @@ void searchDialog::onClickedListWidget(QListWidgetItem* item)
             QDate date = s->getStartTime().date();
             editScheduleDialog* infodialog = new editScheduleDialog("info", date, s, this);
             connect(infodialog, &QDialog::finished, infodialog, &QObject::deleteLater);
+            infodialog->setWindowTitle("일정 조회");
             infodialog->exec();
 
             break;

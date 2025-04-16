@@ -159,6 +159,7 @@ void calenderWidget::onClickedDate(const QDate &date)
 {
     qDebug() << "onClickedDate called";
     scheduleDialog = new showScheduleDialog(date);
+    scheduleDialog->setWindowTitle(date.toString("yyyy년 MM월 dd일"));
     if (scheduleDialog->exec() == QDialog::Rejected)
     {
         getSchedules();
@@ -170,6 +171,7 @@ void calenderWidget::onClickedSearchBtn()
 {
     qDebug() << "onClickedSearchBtn called";
     searchdialog = new searchDialog();
+    searchdialog->setWindowTitle("일정 검색");
     searchdialog->exec();
 }
 

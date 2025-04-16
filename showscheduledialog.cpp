@@ -50,6 +50,7 @@ QDate showScheduleDialog::getDate() const{
 
 void showScheduleDialog::newSchedule(){
     dial = new editScheduleDialog("add", this->getDate()); // label로 상단 제목 전달 (추가, 수정, 보기)
+    dial->setWindowTitle("일정 추가");
     if (dial->exec() == QDialog::Accepted) {
         // editDialog에서 추가한 일정에 현재 선택된 날짜가 포함되어 있다면 리스트에 add
         if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
@@ -83,6 +84,7 @@ void showScheduleDialog::editSchedule(QListWidgetItem* targetItem){
     for (int i = 0; i < listItems.size(); ++i) {
         if (listItems[i] == targetItem){
             dial = new editScheduleDialog("edit", this->getDate(), schedules[i], this);
+            dial->setWindowTitle("일정 수정");
             if (dial->exec() == QDialog::Accepted) {
                 int id = schedules[i]->getScheduleId();
                 if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
@@ -111,6 +113,7 @@ void showScheduleDialog::scheduleInfo(scheduleListWidget* target){
     for (int i = 0; i < listWidgets.size(); ++i) {
         if (listWidgets[i] == target){
             dial = new editScheduleDialog("info", this->getDate(), schedules[i]);
+            dial->setWindowTitle("일정 보기");
             dial->exec();
         }
     }
