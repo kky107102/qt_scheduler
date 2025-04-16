@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QDate>
+#include <QSize>
 #include <QListWidgetItem>
 #include <QDateTime>
 #include "editscheduledialog.h"
@@ -26,6 +27,7 @@ public:
     explicit showScheduleDialog(QDate date, QWidget *parent);
     ~showScheduleDialog();
     QDate getDate();
+    void addRepeat(QString);
 
 private:
     Ui::showScheduleDialog *ui;

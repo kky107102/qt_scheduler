@@ -41,6 +41,7 @@ private slots:
     void onOkClicked();
     void onCancelClicked();
     void saveScheduledata();
+    void onChecked(Qt::CheckState state);
 signals:
     void signal_done();
 };
