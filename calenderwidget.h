@@ -28,6 +28,7 @@ private:
     QVector<Schedule> schedules;
     showScheduleDialog * scheduleDialog;
     searchDialog * searchdialog;
+    QList<QDate> getEffectiveDates(const Schedule& s, const QDate& firstDate, const QDate& lastDate);
 
 private slots:
     void onClickedDate(const QDate &date); // eidtscheduledialog 호출

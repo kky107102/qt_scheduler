@@ -59,29 +59,10 @@ QDate showScheduleDialog::getDate() const{
 void showScheduleDialog::newSchedule(){
     dial = new editScheduleDialog("add", this->getDate()); // label로 상단 제목 전달 (추가, 수정, 보기)
     if (dial->exec() == QDialog::Accepted) {
-        // if (dial->getSchedule()->getPeriod() == "반복 안 함"){
-        qDebug() << dial->getSchedule()->getPeriod();
-            if (dial->getSchedule()->getStartTime().date() <= this->getDate() && this->getDate() <= dial->getSchedule()->getEndTime().date()){
-                schedules.push_back(dial->getSchedule());
-                // db에 삽입
-                dbManager::instance().insertSchedule(*schedules.back());
-                emit add_signal();
-            }
-            else {
-                dbManager::instance().insertSchedule(*(dial->getSchedule()));
-            }
-        // }
-        // else if (dial->getSchedule()->getPeriod() == "1주 마다"){
-
-        //     for (int week = 0; week < 52; week++){
-
-        //     }
-        // }
-        // else if (dial->getSchedule()->getPeriod() == "1개월 마다"){
-        //     for (int month = 0; month < 12; month++){
-
-        //     }
-        // }
+        schedules.push_back(dial->getSchedule());
+        // db에 삽입
+        dbManager::instance().insertSchedule(*schedules.back());
+        emit add_signal();
     }
 }
 
@@ -158,7 +139,6 @@ void showScheduleDialog::getScheduleList()
 {
     QList<Schedule> sList = dbManager::instance().getSchedulesForDate(date);
 
-    qDebug() << "Schedule :" << sList.isEmpty();
     if (sList.isEmpty())
     {
         qDebug() << "[DEBUG] schedule list is empty";

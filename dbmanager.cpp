@@ -68,6 +68,37 @@ bool dbManager::isDateInSchedule(const QDate& date, const QDate& start, const QD
         return false;
 }
 
+bool dbManager::isDateInRepeatedSchedule(const QDate& date, const QDate& sTime, const QDate& eTime, const QString& period)
+{
+    if (date < sTime) return false;
+
+    if (period == "1주 마다")
+    {
+        int daysBetween = sTime.daysTo(date);
+        if (daysBetween < 0) return false;
+
+        int repeatCycle = 7;
+        int repetition = daysBetween / repeatCycle;
+
+        QDate shiftedStart = sTime.addDays(repetition * repeatCycle);
+        QDate shiftedEnd = eTime.addDays(repetition * repeatCycle);
+
+        return (date >= shiftedStart && date <= shiftedEnd);
+    }
+    else if (period == "1개월 마다")
+    {
+        int monthsBetween = (date.year() - sTime.year()) * 12 + (date.month() - sTime.month());
+        if (monthsBetween < 0) return false;
+
+        QDate shiftedStart = sTime.addMonths(monthsBetween);
+        QDate shiftedEnd = eTime.addMonths(monthsBetween);
+
+        return (date >= shiftedStart && date <= shiftedEnd);
+    }
+
+    return false;
+}
+
 bool dbManager::createScheduleTable()
 {
     QSqlQuery query(db);
@@ -94,8 +125,8 @@ bool dbManager::createScheduleTable()
 int dbManager::insertSchedule(const Schedule& s)
 {
     QSqlQuery query(db);
-    query.prepare("insert into scheduleTbl (name, start, end, location, memo) "
-                  "values (:name, :start, :end, :location, :memo, :period)");
+    query.prepare("INSERT INTO scheduleTbl (name, start, end, location, memo, period) "
+                  "VALUES (:name, :start, :end, :location, :memo, :period)");
     query.bindValue(":name", s.getScheduleName());
     query.bindValue(":start", s.getStartTime());
     query.bindValue(":end", s.getEndTime());
@@ -104,7 +135,7 @@ int dbManager::insertSchedule(const Schedule& s)
     query.bindValue(":period", s.getPeriod());
     if(!query.exec())
     {
-        qDebug() << "[ERROR] insert query.exec() failed";
+        qDebug() << "[ERROR] insert query.exec() failed:" << query.lastError().text();
         return -1; // fail
     }
 
@@ -200,19 +231,26 @@ QList<Schedule> dbManager::getSchedulesForDate(const QDate& date)
     }
 
     while(query.next())
-    {
-        QDate sTime = query.value("start").toDate();
-        QDate eTime = query.value("end").toDate();
-        if (isDateInSchedule(date, sTime, eTime)) {
-            Schedule s;
-            s.setScheduleId(query.value("id").toInt());
-            s.setScheduleName(query.value("name").toString());
-            s.setStartTime(query.value("start").toDateTime());
-            s.setEndTime(query.value("end").toDateTime());
-            s.setLocation(query.value("location").toString());
-            s.setMemo(query.value("memo").toString());
-            s.setPeriod(query.value("period").toString());
+    {   
+        Schedule s;
+        s.setScheduleId(query.value("id").toInt());
+        s.setScheduleName(query.value("name").toString());
+        s.setStartTime(query.value("start").toDateTime());
+        s.setEndTime(query.value("end").toDateTime());
+        s.setLocation(query.value("location").toString());
+        s.setMemo(query.value("memo").toString());
+        s.setPeriod(query.value("period").toString());
 
+        QDate sTime = s.getStartTime().date();
+        QDate eTime = s.getEndTime().date();
+        QString period = s.getPeriod();
+
+        if (isDateInSchedule(date, sTime, eTime))
+        {
+            sList.append(s);
+        }
+        else if (isDateInRepeatedSchedule(date, sTime, eTime, period))
+        {
             sList.append(s);
         }
     }

@@ -23,7 +23,9 @@ private:
 
     bool initDb();
     bool createScheduleTable();
+
     bool isDateInSchedule(const QDate& date, const QDate& start, const QDate& end);
+    bool isDateInRepeatedSchedule(const QDate& date, const QDate& sTime, const QDate& eTime, const QString& period);
 
     QString dbName;
     QString dbPath;
